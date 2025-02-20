@@ -1,0 +1,6 @@
+@pfe_back_HostAddress = http://localhost:5253
+
+GET {{pfe_back_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
