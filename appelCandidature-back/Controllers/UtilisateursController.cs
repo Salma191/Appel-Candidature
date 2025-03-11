@@ -22,7 +22,8 @@ namespace pfe_back.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Utilisateur>>> GetUtilisateurs()
         {
-            return await _context.Utilisateurs.ToListAsync();
+
+            return await _context.Utilisateurs.Include(u => u.Role).ToListAsync();
         }
 
         // GET: api/Utilisateurs/5
@@ -48,7 +49,7 @@ namespace pfe_back.Controllers
         {
 
             utilisateur.Id = id;
-
+            utilisateur.Password = BCrypt.Net.BCrypt.HashPassword(utilisateur.Password);
             _context.Entry(utilisateur).State = EntityState.Modified;
 
             try
@@ -80,7 +81,7 @@ namespace pfe_back.Controllers
                 return Conflict(new { message = "Cet email est déjà utilisé." });
             }
 
-
+            utilisateur.Role = await _context.Roles.FindAsync(utilisateur.RoleId);
             utilisateur.Password = BCrypt.Net.BCrypt.HashPassword(utilisateur.Password);
 
   

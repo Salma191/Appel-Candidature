@@ -7,6 +7,7 @@ namespace pfe_back.Models
         public int Id { get; set; }
         public required string Nom { get; set; }
         [JsonIgnore]
-        public ICollection<Utilisateur> Utilisateurs { get; set; }
+        public ICollection<Utilisateur>? Utilisateurs { get; set; }
     }
 }
+

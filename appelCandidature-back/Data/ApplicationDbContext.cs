@@ -8,8 +8,6 @@ namespace pfe_back.Data
         public ApplicationDbContext(DbContextOptions options) : base(options) { 
 
         }
-
-        public DbSet<Administrateur> Administrateurs { get; set; }
         public DbSet<Candidat> Candidats { get; set; }
         public DbSet<Candidature> Candidatures { get; set; }
         public DbSet<Commission> Commissions { get; set; }
@@ -33,12 +31,6 @@ namespace pfe_back.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Utilisateur>()
-                .HasDiscriminator<string>("UtilisateurType")
-                .HasValue<DAO>("DAO")
-                .HasValue<Candidat>("Candidat")
-                .HasValue<MembreCommission>("MembreCommission")
-                .HasValue<Administrateur>("Administrateur");
 
             modelBuilder.Entity<Commission>()
                 .HasMany(c => c.MembreCommissions)
@@ -75,9 +67,9 @@ namespace pfe_back.Data
                 .WithOne(n => n.Candidature)
                 .HasForeignKey(f => f.CandidatureId);
 
-            modelBuilder.Entity<PV>()
-                .HasOne(p => p.TypePoste)
-                .WithMany(t => t.PVs)
+            modelBuilder.Entity<TypePoste>()
+                .HasMany(p => p.PVs)
+                .WithOne(t => t.TypePoste)
                 .HasForeignKey(f => f.TypePosteId);
 
             modelBuilder.Entity<PV>()
@@ -125,7 +117,24 @@ namespace pfe_back.Data
                 .WithMany(d => d.Postes)
                 .HasForeignKey(f => f.DecisionId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TypePoste>()
+                .ToTable("TypePostes");
+
+            modelBuilder.Entity<MembreCommission>()
+                .HasIndex(mc => new { mc.UtilisateurId, mc.CommissionId })
+                .IsUnique();
+
+            //            modelBuilder.Entity<Role>().HasData(
+            //    new Role { Id = 1, Nom = "Administrateur" },
+            //    new Role { Id = 2, Nom = "DAO" },
+            //    new Role { Id = 3, Nom = "Candidat" },
+            //    new Role { Id = 4, Nom = "MembreCommission" }
+            //);
+
         }
+
+
         public DbSet<pfe_back.Models.Poste> Poste { get; set; } = default!;
         public DbSet<pfe_back.Models.Decision> Decision { get; set; } = default!;
         public DbSet<pfe_back.Models.PV> PV { get; set; } = default!;

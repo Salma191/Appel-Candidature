@@ -8,19 +8,20 @@ namespace pfe_back.Models
         [Key]
         public int Id { get; set; }
 
-        public required string Nom { get; set; }
-        public required string Prenom { get; set; }
+        public string? Nom { get; set; }
+        public string? Prenom { get; set; }
 
-        [Required]
         [EmailAddress]
-        public required string Email { get; set; }
+        public string? Email { get; set; }
 
-        [Required]
         [MinLength(8, ErrorMessage = "Le mot de passe doit contenir au moins 8 caractères.")]
-        public required string Password { get; set; }
+        public string? Password { get; set; }
 
-        public int RoleId { get; set; }
+        public int? RoleId { get; set; }
         public Role? Role { get; set; }
+        public Candidat? Candidat { get; set; }
+        public DAO? DAO { get; set; }
+        public MembreCommission? MembreCommission { get; set; }
     }
 
 }

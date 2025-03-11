@@ -1,0 +1,63 @@
+<app-sidebar></app-sidebar>
+<app-table [breadcrumb]="breadcrumb">
+    <div class="overflow-hidden rounded-lg border border-gray-200 shadow-md">
+      <table class="w-full border-collapse bg-white text-left text-sm text-gray-500">
+        <thead class="bg-gray-50">
+          <tr>
+            <th *ngFor="let column of columns" class="px-6 py-4 font-medium text-gray-900">
+              {{ column.label }}
+            </th>
+            <th *ngIf="actions.length > 0" class="px-6 py-4 font-medium text-gray-900">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100 border-t border-gray-100">
+          <tr *ngFor="let item of data" class="hover:bg-gray-50">
+            <td *ngFor="let column of columns" class="px-6 py-4">
+              <div class="relative inline-block text-left" *ngIf="column.key === 'comite'; else defaultColumn">
+                <div>
+                  <button [ngClass]="{ 'open': isComiteOpen }" (click)="toggleMenu()" type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                    Comite
+                    <svg class="-mr-1 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                      <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                  <div class="py-1" role="none">
+                    <a *ngIf="isComiteOpen" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-0">Account settings</a>
+                  </div>
+                </div>
+              </div>
+              <ng-template #defaultColumn>
+                {{ item[column.key] }}
+              </ng-template>
+            </td>
+            <td class="px-6 py-4">
+                <ng-container *ngIf="generateColumn">
+                    <ion-icon name="document-outline"></ion-icon>
+                </ng-container>                 
+            </td>
+            <td class="px-6 py-4">
+                <ng-container *ngIf="statutColumn">
+                    <span [ngClass]="{
+                        'rounded-full px-4 py-2 text-xs font-semibold': true,
+                        'bg-orange-100': item['statut'] === 'Draft',
+                        'bg-green-50 text-green-500': item['statut'] === 'approuve'
+                      }">
+                        {{ item['statut'] }}
+                    </span>
+                </ng-container>                 
+            </td>
+            <td *ngIf="actions.length > 0" class="px-6 py-4">
+              <div class="flex justify-end gap-4">
+                <button
+                  *ngFor="let action of actions"
+                  class="text-white font-medium rounded-lg text-sm px-4 py-2"
+                  (click)="onActionClicked({ action: action.name, item: item })">
+                  <ion-icon [name]="action.icon"></ion-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </app-table>

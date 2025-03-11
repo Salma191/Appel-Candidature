@@ -1,13 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace pfe_back.Models
 {
-    public class MembreCommission : Utilisateur
+    public class MembreCommission
     {
-        public RoleCommission Role { get; set; }
+        public int Id { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public RoleCommission RoleCommission { get; set; }
 
         public int CommissionId { get; set; }
+        [JsonIgnore]
         public Commission? Commission { get; set; }
+
+        public int UtilisateurId { get; set; }
+        public Utilisateur? Utilisateur { get; set; }
+
     }
 
     public enum RoleCommission

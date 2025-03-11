@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using BCrypt.Net;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace pfe_back.Controllers
 {
@@ -50,26 +51,60 @@ namespace pfe_back.Controllers
             };
 
             _context.Utilisateurs.Add(utilisateur);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // Sauvegarde pour générer l'ID
 
-            return Ok("Utilisateur enregistré avec succès !");
+            // Création du candidat lié à l'utilisateur
+            var candidat = new Candidat
+            {
+                AffectationActuelle = string.Empty,  // Ou valeurs par défaut
+                DateRetraite = DateTime.Now.AddYears(5),  // Valeur par défaut
+                JoursAbsence = 0,  // Valeur par défaut
+                Sanction = string.Empty,  // Valeur par défaut
+                NoteTroisDernieresAnnees = string.Empty,  // Valeur par défaut
+                Catégorie = string.Empty,  // Valeur par défaut
+                Congé = string.Empty,  // Valeur par défaut
+                PosteOccupe = string.Empty,  // Valeur par défaut
+                Consentement = false,  // Valeur par défaut
+                UtilisateurId = utilisateur.Id,  // Lier le candidat à l'utilisateur
+                Utilisateur = utilisateur
+            };
+
+            // Ajouter le candidat à la base de données
+            _context.Candidats.Add(candidat);
+            await _context.SaveChangesAsync(); // Sauvegarde pour générer l'ID du candidat
+
+            return Ok("Utilisateur et candidat enregistrés avec succès !");
         }
 
-        // POST : api/auth/login
+
+
+
+        [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginModel model)
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
+            Console.WriteLine($"Requête reçue avec email: {model?.Email}");
+            if (model == null || string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Password))
+            {
+                return BadRequest(new { Message = "Email et mot de passe sont requis." });
+            }
+
             var utilisateur = await _context.Utilisateurs
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.Email == model.Email);
 
             if (utilisateur == null || !BCrypt.Net.BCrypt.Verify(model.Password, utilisateur.Password))
-                return Unauthorized("Email ou mot de passe incorrect.");
+            {
+                Console.WriteLine("Échec d'authentification : utilisateur non trouvé ou mot de passe incorrect.");
+                return Unauthorized(new { Message = "Email ou mot de passe incorrect." });
+            }
 
             var token = GenerateJwtToken(utilisateur);
+            Console.WriteLine($"Token généré: {token}");
 
             return Ok(new { Token = token });
         }
+
 
         // Méthode pour générer le token JWT
         private string GenerateJwtToken(Utilisateur utilisateur)
