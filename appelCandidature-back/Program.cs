@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using pfe_back.Controllers;
+using pfe_back.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,9 @@ builder.Logging.AddConsole();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<CommissionService>(); // Ajout du service dans DI
+builder.Services.AddScoped<DecisionService>(); // Ajout du service dans DI
+
 
 // Connexion � la base de donn�es SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

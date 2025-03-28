@@ -541,3 +541,14 @@ C:\Users\lenovo\Desktop\AppelCandidature\pfe_back\obj\Debug\net8.0\refint\pfe_ba
 C:\Users\lenovo\Desktop\AppelCandidature\pfe_back\obj\Debug\net8.0\pfe_back.pdb
 C:\Users\lenovo\Desktop\AppelCandidature\pfe_back\obj\Debug\net8.0\pfe_back.genruntimeconfig.cache
 C:\Users\lenovo\Desktop\AppelCandidature\pfe_back\obj\Debug\net8.0\ref\pfe_back.dll
+C:\Users\lenovo\Desktop\AppelCandidature\appelCandidature-back\obj\Debug\net8.0\pfe_back.csproj.AssemblyReference.cache
+C:\Users\lenovo\Desktop\AppelCandidature\appelCandidature-back\obj\Debug\net8.0\pfe_back.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\lenovo\Desktop\AppelCandidature\appelCandidature-back\obj\Debug\net8.0\pfe_back.AssemblyInfoInputs.cache
+C:\Users\lenovo\Desktop\AppelCandidature\appelCandidature-back\obj\Debug\net8.0\pfe_back.AssemblyInfo.cs
+C:\Users\lenovo\Desktop\AppelCandidature\appelCandidature-back\obj\Debug\net8.0\pfe_back.csproj.CoreCompileInputs.cache
+C:\Users\lenovo\Desktop\AppelCandidature\appelCandidature-back\obj\Debug\net8.0\pfe_back.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\lenovo\Desktop\AppelCandidature\appelCandidature-back\obj\Debug\net8.0\pfe_back.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\lenovo\Desktop\AppelCandidature\appelCandidature-back\obj\Debug\net8.0\pfe_back.sourcelink.json
+C:\Users\lenovo\Desktop\AppelCandidature\appelCandidature-back\obj\Debug\net8.0\pfe_back.dll
+C:\Users\lenovo\Desktop\AppelCandidature\appelCandidature-back\obj\Debug\net8.0\refint\pfe_back.dll
+C:\Users\lenovo\Desktop\AppelCandidature\appelCandidature-back\obj\Debug\net8.0\pfe_back.pdb
