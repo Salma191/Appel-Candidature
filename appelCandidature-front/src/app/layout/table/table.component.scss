@@ -1,0 +1,14 @@
+/* Header largeur par défaut (avec sidebar ouverte) */
+header {
+    margin-left: 280px;
+    margin-right: 20px; /* Ajout de margin-right */
+    width: calc(100% - 300px); /* 250px (sidebar) + 20px (margin-right) */
+    transition: margin 0.3s ease, width 0.3s ease;
+}
+
+/* Quand la sidebar est fermée */
+header.collapsed {
+    margin-left: 100px;
+    margin-right: 20px; /* Toujours un petit espace à droite */
+    width: calc(100% - 120px); /* 80px (sidebar réduite) + 20px (margin-right) */
+}

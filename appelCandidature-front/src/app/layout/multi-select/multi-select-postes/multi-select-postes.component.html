@@ -1,0 +1,27 @@
+<div class="multi-select-dropdown">
+    <div class="input-container">
+        <div *ngFor="let item of items; trackBy: trackById">
+            <div *ngIf="selectedItems.has(item.id)" class="selected-item">
+            <span>{{ item.description }}</span>
+            <button (click)="removeItem(item, $event)">x</button>
+        </div>
+        </div>
+
+      <input
+        type="text"
+        (input)="filterItems($event)"
+        placeholder="Select items..."
+      >
+    </div>
+  
+    <div *ngIf="isDropdownVisible" class="dropdown-list">
+      <div *ngFor="let item of items; trackBy: trackById" (click)="toggleItem(item, $event)">
+        <div class="dropdown-item">
+        <span class="checkbox" [class.checked]="selectedItems.has(item.id)">
+          <span *ngIf="selectedItems.has(item.id)" class="checkmark">✓</span>
+        </span>
+        <span>{{ item.description }}</span>
+    </div>
+      </div>
+    </div>
+  </div>

@@ -1,219 +1,414 @@
-/*===== GOOGLE FONTS =====*/
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-/*===== BASE =====*/
-*, ::before, ::after {
-    box-sizing: border-box;
-}
+// *,
+// ::before,
+// ::after {
+//     box-sizing: border-box
+// }
 
-h1 {
+// h1 {
+//     margin: 0
+// }
+
+// .nav__link {
+//     position: relative
+// }
+
+// .nav__link ul {
+//     display: none;
+//     flex-direction: column;
+//     background-color: #FFF;
+//     padding: .5rem 0;
+//     border-radius: .5rem;
+//     top: 100%;
+//     left: 0;
+//     width: -webkit-max-content;
+//     width: -moz-max-content;
+//     width: max-content;
+//     min-width: 220px;
+//     width: 100%;
+//     z-index: 10
+// }
+
+// .nav__link a.nav_name {
+//     padding: .75rem 1rem;
+//     color: #000;
+//     font-size: .875rem;
+//     display: block
+// }
+
+// .nav__link a.nav_name:hover {
+//     background-color: #000;
+//     color: #FFF
+// }
+
+// .nav__link.open ul {
+//     display: flex
+// }
+
+// .collapse__link {
+//     transition: transform .3s ease
+// }
+
+// .collapse__link.rotate {
+//     transform: rotate(180deg)
+// }
+
+// a {
+//     text-decoration: none
+// }
+
+// :root {
+//     --body-font: 'Poppins', sans-serif;
+//     --normal-font-size: 1rem
+// }
+
+// .l-navbar {
+//     position: fixed;
+//     top: 0;
+//     left: 0;
+//     width: 92px;
+//     height: 100vh;
+//     background-color: #FFF;
+//     color: #000;
+//     padding: 1.5rem 1.5rem 2rem;
+//     z-index: 100;
+//     overflow: hidden;
+//     transition: transform .3s ease;
+//     transform: translateX(0);
+//     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1)
+// }
+
+// .l-navbar .open {
+//     transform: translateX(0)
+// }
+
+// .l-navbar.closed {
+//     transform: translateX(-100%)
+// }
+
+// .l-navbar:hover {
+//     width: calc(92px + 12.25rem);
+//     transition: width .3s ease
+// }
+
+// .l-navbar:hover .nav__name {
+//     display: block
+// }
+
+// .nav {
+//     height: 100%;
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: space-between;
+//     overflow: hidden
+// }
+
+// .nav__brand {
+//     display: grid;
+//     grid-template-columns: -webkit-max-content -webkit-max-content;
+//     grid-template-columns: max-content max-content;
+//     justify-content: space-between;
+//     align-items: center;
+//     margin-bottom: 2rem
+// }
+
+// .nav__brand:hover {
+//     border-radius: .5rem
+// }
+
+// .nav__toggle {
+//     font-size: 1.25rem;
+//     padding: .75rem;
+//     cursor: pointer
+// }
+
+// .nav__logo {
+//     font-weight: 600
+// }
+
+// .nav__link {
+//     display: grid;
+//     grid-template-columns: -webkit-max-content -webkit-max-content;
+//     grid-template-columns: max-content max-content;
+//     align-items: center;
+//     column-gap: .75rem;
+//     padding: .75rem;
+//     border-radius: .5rem;
+//     margin-bottom: 1rem;
+//     transition: .3s;
+//     cursor: pointer
+// }
+
+// .nav__link:hover {
+//     background-color: #000;
+//     color: #FFF
+// }
+
+// .nav__icon {
+//     font-size: 1.25rem
+// }
+
+// .nav__name {
+//     font-size: .875rem;
+//     display: none
+// }
+
+// .expander {
+//     width: calc(92px + 9.25rem)
+// }
+
+// .body-pd {
+//     padding: 2rem 0 0 16rem
+// }
+
+// .active {
+//     background-color: #FFF
+// }
+
+// .collapse {
+//     grid-template-columns: 20px -webkit-max-content 1fr;
+//     grid-template-columns: 20px max-content 1fr
+// }
+
+// .collapse__link {
+//     justify-self: flex-end;
+//     transition: .5s
+// }
+
+// .collapse__menu {
+//     padding: .75rem 2.25rem
+// }
+
+// // .collapse__sublink {
+// //     color: #FFF;
+// //     font-size: .875rem
+// // }
+
+// // .collapse__sublink:hover {
+// //     color: #FFF
+// // }
+
+// // .showCollapse {
+// //     display: block
+// // }
+
+// .rotate {
+//     transform: rotate(180deg)
+// }
+
+// .nav__link-content {
+//     display: flex;
+//     align-items: center;
+//     gap: .75rem
+// }
+
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
     margin: 0;
+    padding: 0;
 }
 
-/* Menu déroulant (sous-items) */
-.nav__link {
-    position: relative;
-  
-    ul {
-      display: none; /* Caché par défaut */
-      flex-direction: column;
-      background-color: #FFF; /* Fond des sous-menus */
-      padding: 0.5rem 0;
-      border-radius: 0.5rem;
-      flex-direction: column;
-      top: 100%;
-      left: 0;
-      width: max-content;
-      min-width: 150px;
-      width: 100%;
-      z-index: 10;
-    }
-  
-    a.nav_name {
-      padding: 0.75rem 1rem;
-      color: #000;
-      font-size: 0.875rem;
-      display: block;
-  
-      &:hover {
-        background-color: #B6CEFC;
-        color: #000;
-      }
-    }
-  }
-  
-  /* Affichage des sous-items lors du clic */
-  .nav__link.open ul {
-    display: flex;
-  }
-  
-  /* Animation pour la rotation de l'icône */
-  .collapse__link {
-    transition: transform 0.3s ease;
-  }
-  
-  .collapse__link.rotate {
-    transform: rotate(180deg);
-  }
-  
-
-a {
-    text-decoration: none;
-}
-
-/*===== VARIABLES =====*/
-:root {
-
-    /*===== Typographie =====*/
-    --body-font: 'Poppins', sans-serif;
-    --normal-font-size: 1rem;
-}
-
-/*===== NAVBAR =====*/
+/* Styles de base pour la barre latérale */
+/* Styles de base pour la barre latérale */
 .l-navbar {
+    width: 250px; /* Largeur par défaut */
+    height: 100vh;
+    background-color: #1f2937;
+    padding: 1rem;
     position: fixed;
     top: 0;
     left: 0;
-    width: 92px;
-    height: 100vh;
-    background-color: #FFF;
-    color: #000;
-    padding: 1.5rem 1.5rem 2rem;
-    z-index: 100;
-    overflow: hidden;
-    transition: transform 0.3s ease;
-    transform: translateX(0);
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-
-    &.open {
-        transform: translateX(0);
-    }
-
-    &.closed {
-        transform: translateX(-100%);
-    }
-
-    &:hover {
-        width: calc(92px + 12.25rem);
-        transition: width 0.3s ease;
-
-        .nav__name {
-            display: block;
-        }
-    }
-}
-
-/*===== NAVIGATION =====*/
-.nav {
-    height: 100%;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    overflow: hidden;
-
-    &__brand {
-        display: grid;
-        grid-template-columns: max-content max-content;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-
-        &:hover {
-            background-color: #0C5DF4;
-            border-radius: .5rem;
-        }
-    }
-
-    &__toggle {
-        font-size: 1.25rem;
-        padding: .75rem;
-        cursor: pointer;
-    }
-
-    &__logo {
-        font-weight: 600;
-    }
-// LOGOS & NAME
-    &__link {
-        display: grid;
-        grid-template-columns: max-content max-content;
-        align-items: center;
-        column-gap: .75rem;
-        padding: .75rem;
-        color: #000;
-        border-radius: .5rem;
-        margin-bottom: 1rem;
-        transition: .3s;
-        cursor: pointer;
-
-        &:hover {
-            background-color: #000;
-        }
-    }
-
-    &__icon {
-        font-size: 1.25rem;
-    }
-
-    &__name {
-        font-size: .875rem;
-        display: none;
-    }
+    transition: transform 0.3s ease, width 0.3s ease; /* Transition pour transform et width */
 }
 
-/* Expander menu */
-.expander {
-    width: calc(92px + 9.25rem);
+/* Classe pour ouvrir la barre latérale */
+.l-navbar.open {
+    transform: translateX(0); /* Affiche la barre latérale */
+    width: 250px;
 }
 
-/* Padding body */
-.body-pd {
-    padding: 2rem 0 0 16rem;
+/* Classe pour fermer la barre latérale */
+.l-navbar.closed {
+    width: 80px; /* Largeur réduite pour ne montrer que l'icône */
+    overflow: hidden; /* Masque le contenu qui dépasse */
+  }
+
+/* Styles pour l'icône du menu */
+.nav__brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    position: relative; /* Pour positionner l'icône correctement */
 }
 
-/* Active links */
-.active {
-    background-color: #FFF;
+.nav__icon {
+    font-size: 1.5rem; /* Taille de l'icône */
+    min-width: 24px; /* Largeur minimale pour éviter le rétrécissement */
+    text-align: center; /* Centrer l'icône */
+    font-size: 1.5rem;
+    color: #d1d5db;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+.nav__icon:hover {
+    color: #fff;
 }
 
-/* COLLAPSE */
-.collapse {
-    grid-template-columns: 20px max-content 1fr;
+/* Masquer le texte et les autres éléments lorsque la barre latérale est fermée */
+.l-navbar.closed .nav__name,
+.l-navbar.closed .collapse__link {
+    display: none; /* Masque tout sauf l'icône */
+    justify-content: center;
+    align-items: center;
+}
 
-    &__link {
-        justify-self: flex-end;
-        transition: .5s;
-    }
+.l-navbar.closed .nav__link {
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+    align-items: center; /* Centre verticalement */
+    padding: 0.8rem 0; /* Ajustez le padding pour réduire l'espace vertical */
+  }
+  
+  .l-navbar.closed .nav__icon {
+    margin: 0; /* Supprime les marges inutiles */
+  }
 
-    &__menu {
-        padding: .75rem 2.25rem;
-    }
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex-grow: 1; /* Prend tout l'espace disponible */
+}
 
-    &__sublink {
-        color: #000;
-        font-size: .875rem;
+/* Conteneur pour les sous-menus en bas */
+.nav__dropdown-container {
+    margin-top: auto; /* Pousse le conteneur en bas */
+}
 
-        &:hover {
-            color: #FFF;
-        }
-    }
+/* Styles pour les liens */
+.nav__link {
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    color: #d1d5db;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background 0.3s;
 }
 
 
-/* Show collapse */
-.showCollapse {
+
+.nav__link:hover,
+.nav__link.active {
+    background-color: #374151;
+    color: #fff;
+}
+
+
+/* Styles pour les sous-menus */
+.nav__link ul {
+    display: none; /* Masqué par défaut */
+    list-style: none;
+    padding-left: 1rem;
+    margin-top: 0.5rem;
+    background-color: #374151;
+    border-radius: 8px;
+}
+
+.nav__link.open ul {
+    display: block; /* Affiché quand ouvert */
+}
+
+.nav__link ul a {
+    padding: 0.5rem 0;
     display: block;
+    color: #d1d5db;
+    text-decoration: none;
+    font-size: 0.9rem;
 }
 
-/* Rotate icon */
+.nav__link ul a:hover {
+    background-color: #4b5563;
+    color: #fff;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Espacement entre les éléments */
+  }
+
+/* Icône de flèche */
+.collapse__link {
+    margin-left: auto;
+    transition: transform 0.3s;
+}
+
 .rotate {
     transform: rotate(180deg);
 }
+/* Top bar */
+.min-h-full {
+    padding: 2rem;
+}
 
-.nav__link-content {
-    display: flex;
-    align-items: center; /* Aligner verticalement les éléments */
-    gap: 0.75rem; /* Espacement entre les éléments */
-  }
+.shadow-sm {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
 
-  
+/* User menu */
+.relative img {
+    border: 2px solid #fff;
+}
+
+.relative div[role='menu'] {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.relative div[role='menu'] a {
+    padding: 0.8rem 1rem;
+    display: block;
+    color: #333;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.relative div[role='menu'] a:hover {
+    background-color: #f3f4f6;
+}
+
+.main-content {
+    margin-left: 250px; /* Valeur par défaut lorsque la sidebar est ouverte */
+    transition: margin-left 0.3s ease; /* Animation fluide */
+    width: calc(100% - 250px); /* Ajustement dynamique */
+}
+
+/* Si la sidebar est fermée */
+.main-content.collapsed {
+    margin-left: 80px; /* Ajustement pour correspondre à la sidebar fermée */
+    width: calc(100% - 80px);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .l-navbar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .min-h-full {
+        margin-left: 0;
+    }
+}

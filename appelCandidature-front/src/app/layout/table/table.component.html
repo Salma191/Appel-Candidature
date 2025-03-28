@@ -1,47 +1,51 @@
 <div class="bg-gray-100 py-4">
-    <header
-      class="bg-white shadow-sm mt-6 mx-auto w-5/6 sm:px-6 lg:px-8 rounded-md"
-    >
-      <div class="mx-auto w-5\6 px-4 py-6 sm:px-6 lg:px-8">
-          <div class="bg-white flex shadow-md rounded-2xl px-6 pt-6 items-center justify-between">
-            <!-- Breadcrumb -->
-            <nav class="mb-4" aria-label="Breadcrumb">
-              <ol class="mb-4 inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse text-gray-600">
-                <li class="inline-flex items-center">
-                  <a href="#" class="inline-flex items-center text-xl font-medium hover:text-blue-600">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
-                    </svg>
-                    {{ breadcrumb.title }}
-                  </a>
-                </li>
-                <li>
-                  <div class="flex items-center">
-                    <svg class="w-4 h-4 text-gray-400 mx-1" fill="none" viewBox="0 0 6 10" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-                    </svg>
-                    <a href="#" class="text-xl font-bold text-gray-800 mb-2">{{ breadcrumb.subTitle }}</a>
-                  </div>
-                </li>
-              </ol>
-              <!-- <h1 class="text-xl font-bold text-gray-800 mb-2">{{ breadcrumb.subTitle }}</h1> -->
-            <p class="text-sm text-gray-500 mb-4">
-              Le PV de lancement définit les postes à pourvoir via l'appel à candidature ainsi que la commission responsable.
-            </p>
-            </nav>
-        
-            <!-- Title -->
-        
-            <!-- Button -->
-            <button class="text-white bg-green-500 hover:bg-green-600 font-medium rounded-lg text-sm px-4 py-2 flex items-center space-x-2">
-              <ion-icon name="add-circle" class="w-5 h-5"></ion-icon>
-              <span>Ajouter un {{ breadcrumb.name }}</span>
-            </button>
-            
-        </div>
-        
-    
-        <ng-content></ng-content>
+  <header class="bg-white shadow-sm mt-6 mx-auto sm:px-6 lg:px-8 rounded-md"
+      [class.expanded]="isSidebarOpen" 
+      [class.collapsed]="!isSidebarOpen">
+      
+      <div class="mx-auto px-4 py-6 sm:px-6 lg:px-8">
+          <div class="mb-10 bg-white flex shadow-md rounded-2xl px-6 pt-6 items-center justify-between">
+              <!-- Breadcrumb -->
+              <nav class="mb-4" aria-label="Breadcrumb">
+                  <ol class="mb-4 inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse text-gray-600">
+                      <li class="inline-flex items-center">
+                          <a href="#" class="inline-flex items-center text-xl font-medium hover:text-blue-600">
+                              <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+                              </svg>
+                              {{ breadcrumb.title }}
+                          </a>
+                      </li>
+                      <li>
+                          <div class="flex items-center">
+                              <svg class="w-4 h-4 text-gray-400 mx-1" fill="none" viewBox="0 0 6 10" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                              </svg>
+                              <a href="#" class="text-xl font-bold text-gray-800">{{ breadcrumb.subTitle }}</a>
+                          </div>
+                      </li>
+                  </ol>
+                  <p class="text-sm text-gray-500 mb-4">
+                      Le PV de lancement définit les postes à pourvoir via l'appel à candidature ainsi que la commission responsable.
+                  </p>
+              </nav>
+
+              <!-- Button -->
+              <button *ngIf="pv" (click)="openModal()" class="text-white bg-green-500 hover:bg-green-600 font-medium rounded-lg text-sm px-4 py-2 flex items-center space-x-2">
+                  <i class="fas fa-plus-circle w-5"></i>
+                  <span>Ajouter un {{ breadcrumb.name }}</span>
+              </button>
+          </div>
+          
+          <ng-content></ng-content>
       </div>
-    </header>
-    </div>
+  </header>
+</div>
+<app-pv-add *ngIf="isModalOpen"
+  title="Ajouter un nouveau PV" 
+  confirmText="Ajouter le PV"
+  (closed)="closeModal()" 
+  (confirmed)="onConfirm()">
+  <!-- Contenu du modal -->
+  
+</app-pv-add>
