@@ -7,9 +7,9 @@ namespace pfe_back.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        public required string Nom { get; set; }
+        public string? Nom { get; set; }
         public ICollection<MembreCommission>? MembreCommissions { get; set; }
+        [JsonIgnore]
         public ICollection<PV>? PVs { get; set; }
     }
 }

@@ -12,8 +12,8 @@ using pfe_back.Data;
 namespace pfe_back.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250310160522_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250326131936_AddTypePJToPieceJointe")]
+    partial class AddTypePJToPieceJointe
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,36 @@ namespace pfe_back.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DecisionPoste", b =>
+                {
+                    b.Property<int>("DecisionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PosteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DecisionId", "PosteId");
+
+                    b.HasIndex("PosteId");
+
+                    b.ToTable("DecisionPoste");
+                });
+
+            modelBuilder.Entity("PVPoste", b =>
+                {
+                    b.Property<int>("PVId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PosteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PVId", "PosteId");
+
+                    b.HasIndex("PosteId");
+
+                    b.ToTable("PVPoste");
+                });
 
             modelBuilder.Entity("pfe_back.Models.Candidat", b =>
                 {
@@ -37,11 +67,9 @@ namespace pfe_back.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Catégorie")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Congé")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Consentement")
@@ -54,18 +82,21 @@ namespace pfe_back.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("NoteTroisDernieresAnnees")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PosteOccupe")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Sanction")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UtilisateurId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UtilisateurId")
+                        .IsUnique();
 
                     b.ToTable("Candidats");
                 });
@@ -113,25 +144,11 @@ namespace pfe_back.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nom")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Commissions");
-                });
-
-            modelBuilder.Entity("pfe_back.Models.DAO", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DAOs");
                 });
 
             modelBuilder.Entity("pfe_back.Models.Decision", b =>
@@ -141,9 +158,6 @@ namespace pfe_back.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DAOId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreation")
                         .HasColumnType("datetime2");
@@ -157,9 +171,8 @@ namespace pfe_back.Migrations
                     b.Property<DateTime>("DateSignature")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Entite")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("EntiteId")
+                        .HasColumnType("int");
 
                     b.Property<int>("NbreMaxPosteCandidat")
                         .HasColumnType("int");
@@ -167,22 +180,44 @@ namespace pfe_back.Migrations
                     b.Property<int>("PVId")
                         .HasColumnType("int");
 
-                    b.Property<string>("PieceJoint")
-                        .IsRequired()
+                    b.Property<string>("Reference")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Statut")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DAOId");
+                    b.HasIndex("EntiteId");
 
                     b.HasIndex("PVId")
                         .IsUnique();
 
                     b.ToTable("Decision");
+                });
+
+            modelBuilder.Entity("pfe_back.Models.DecisionPhase", b =>
+                {
+                    b.Property<int>("DecisionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PhaseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateDebut")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateFin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Statut")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DecisionId", "PhaseId");
+
+                    b.HasIndex("PhaseId");
+
+                    b.ToTable("DecisionPhases");
                 });
 
             modelBuilder.Entity("pfe_back.Models.Diplome", b =>
@@ -242,6 +277,22 @@ namespace pfe_back.Migrations
                     b.ToTable("Documents");
                 });
 
+            modelBuilder.Entity("pfe_back.Models.Entite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nom")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Entites");
+                });
+
             modelBuilder.Entity("pfe_back.Models.Experience", b =>
                 {
                     b.Property<int>("Id")
@@ -289,9 +340,18 @@ namespace pfe_back.Migrations
                     b.Property<int>("RoleCommission")
                         .HasColumnType("int");
 
+                    b.Property<int>("UtilisateurId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CommissionId");
+
+                    b.HasIndex("UtilisateurId")
+                        .IsUnique();
+
+                    b.HasIndex("UtilisateurId", "CommissionId")
+                        .IsUnique();
 
                     b.ToTable("MembreCommissions");
                 });
@@ -334,19 +394,17 @@ namespace pfe_back.Migrations
                     b.Property<int>("CommissionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("DAOId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("DateCreation")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateValidation")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Entite")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("EntiteId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("PieceJointe")
+                    b.Property<string>("Reference")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Statut")
@@ -359,7 +417,7 @@ namespace pfe_back.Migrations
 
                     b.HasIndex("CommissionId");
 
-                    b.HasIndex("DAOId");
+                    b.HasIndex("EntiteId");
 
                     b.HasIndex("TypePosteId");
 
@@ -374,26 +432,47 @@ namespace pfe_back.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateDebut")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateFin")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DecisionId")
+                    b.Property<int>("Nom")
                         .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Phases");
+                });
+
+            modelBuilder.Entity("pfe_back.Models.PieceJointe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("DecisionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Fichier")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsFromPV")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Nom")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Statut")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("PVId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DecisionId");
 
-                    b.ToTable("Phases");
+                    b.HasIndex("PVId");
+
+                    b.ToTable("PieceJointes");
                 });
 
             modelBuilder.Entity("pfe_back.Models.Poste", b =>
@@ -410,9 +489,6 @@ namespace pfe_back.Migrations
                     b.Property<DateTime>("DatePublication")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DecisionId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -420,17 +496,14 @@ namespace pfe_back.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NumeroUnique")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PVId")
+                    b.Property<int>("TypePosteId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DecisionId");
-
-                    b.HasIndex("PVId");
+                    b.HasIndex("TypePosteId");
 
                     b.ToTable("Poste");
                 });
@@ -450,6 +523,28 @@ namespace pfe_back.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nom = "Administrateur"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nom = "DAO"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Nom = "Candidat"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Nom = "MembreCommission"
+                        });
                 });
 
             modelBuilder.Entity("pfe_back.Models.TypePoste", b =>
@@ -477,17 +572,8 @@ namespace pfe_back.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CandidatId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DAOId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("MembreCommissionId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Nom")
                         .HasColumnType("nvarchar(max)");
@@ -503,15 +589,50 @@ namespace pfe_back.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CandidatId");
-
-                    b.HasIndex("DAOId");
-
-                    b.HasIndex("MembreCommissionId");
-
                     b.HasIndex("RoleId");
 
                     b.ToTable("Utilisateurs");
+                });
+
+            modelBuilder.Entity("DecisionPoste", b =>
+                {
+                    b.HasOne("pfe_back.Models.Decision", null)
+                        .WithMany()
+                        .HasForeignKey("DecisionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("pfe_back.Models.Poste", null)
+                        .WithMany()
+                        .HasForeignKey("PosteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PVPoste", b =>
+                {
+                    b.HasOne("pfe_back.Models.PV", null)
+                        .WithMany()
+                        .HasForeignKey("PVId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("pfe_back.Models.Poste", null)
+                        .WithMany()
+                        .HasForeignKey("PosteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("pfe_back.Models.Candidat", b =>
+                {
+                    b.HasOne("pfe_back.Models.Utilisateur", "Utilisateur")
+                        .WithOne("Candidat")
+                        .HasForeignKey("pfe_back.Models.Candidat", "UtilisateurId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Utilisateur");
                 });
 
             modelBuilder.Entity("pfe_back.Models.Candidature", b =>
@@ -535,10 +656,10 @@ namespace pfe_back.Migrations
 
             modelBuilder.Entity("pfe_back.Models.Decision", b =>
                 {
-                    b.HasOne("pfe_back.Models.DAO", "DAO")
+                    b.HasOne("pfe_back.Models.Entite", "Entite")
                         .WithMany("Decisions")
-                        .HasForeignKey("DAOId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("EntiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("pfe_back.Models.PV", "PV")
@@ -547,9 +668,28 @@ namespace pfe_back.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("DAO");
+                    b.Navigation("Entite");
 
                     b.Navigation("PV");
+                });
+
+            modelBuilder.Entity("pfe_back.Models.DecisionPhase", b =>
+                {
+                    b.HasOne("pfe_back.Models.Decision", "Decision")
+                        .WithMany("DecisionPhases")
+                        .HasForeignKey("DecisionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("pfe_back.Models.Phase", "Phase")
+                        .WithMany("DecisionPhases")
+                        .HasForeignKey("PhaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Decision");
+
+                    b.Navigation("Phase");
                 });
 
             modelBuilder.Entity("pfe_back.Models.Diplome", b =>
@@ -593,7 +733,15 @@ namespace pfe_back.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("pfe_back.Models.Utilisateur", "Utilisateur")
+                        .WithOne("MembreCommission")
+                        .HasForeignKey("pfe_back.Models.MembreCommission", "UtilisateurId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Commission");
+
+                    b.Navigation("Utilisateur");
                 });
 
             modelBuilder.Entity("pfe_back.Models.Notification", b =>
@@ -615,76 +763,58 @@ namespace pfe_back.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("pfe_back.Models.DAO", "DAO")
+                    b.HasOne("pfe_back.Models.Entite", "Entite")
                         .WithMany("PVs")
-                        .HasForeignKey("DAOId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("EntiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("pfe_back.Models.TypePoste", "TypePoste")
-                        .WithMany("PVs")
+                        .WithMany()
                         .HasForeignKey("TypePosteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Commission");
 
-                    b.Navigation("DAO");
+                    b.Navigation("Entite");
 
                     b.Navigation("TypePoste");
                 });
 
-            modelBuilder.Entity("pfe_back.Models.Phase", b =>
+            modelBuilder.Entity("pfe_back.Models.PieceJointe", b =>
                 {
                     b.HasOne("pfe_back.Models.Decision", "Decision")
-                        .WithMany("Phases")
-                        .HasForeignKey("DecisionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Decision");
-                });
-
-            modelBuilder.Entity("pfe_back.Models.Poste", b =>
-                {
-                    b.HasOne("pfe_back.Models.Decision", "Decision")
-                        .WithMany("Postes")
+                        .WithMany("PieceJointes")
                         .HasForeignKey("DecisionId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("pfe_back.Models.PV", "PV")
-                        .WithMany("Postes")
+                        .WithMany("PieceJointes")
                         .HasForeignKey("PVId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Decision");
 
                     b.Navigation("PV");
                 });
 
+            modelBuilder.Entity("pfe_back.Models.Poste", b =>
+                {
+                    b.HasOne("pfe_back.Models.TypePoste", "TypePoste")
+                        .WithMany("Postes")
+                        .HasForeignKey("TypePosteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TypePoste");
+                });
+
             modelBuilder.Entity("pfe_back.Models.Utilisateur", b =>
                 {
-                    b.HasOne("pfe_back.Models.Candidat", "Candidat")
-                        .WithMany()
-                        .HasForeignKey("CandidatId");
-
-                    b.HasOne("pfe_back.Models.DAO", "DAO")
-                        .WithMany()
-                        .HasForeignKey("DAOId");
-
-                    b.HasOne("pfe_back.Models.MembreCommission", "MembreCommission")
-                        .WithMany()
-                        .HasForeignKey("MembreCommissionId");
-
                     b.HasOne("pfe_back.Models.Role", "Role")
                         .WithMany("Utilisateurs")
                         .HasForeignKey("RoleId");
-
-                    b.Navigation("Candidat");
-
-                    b.Navigation("DAO");
-
-                    b.Navigation("MembreCommission");
 
                     b.Navigation("Role");
                 });
@@ -712,25 +842,30 @@ namespace pfe_back.Migrations
                     b.Navigation("PVs");
                 });
 
-            modelBuilder.Entity("pfe_back.Models.DAO", b =>
+            modelBuilder.Entity("pfe_back.Models.Decision", b =>
+                {
+                    b.Navigation("DecisionPhases");
+
+                    b.Navigation("PieceJointes");
+                });
+
+            modelBuilder.Entity("pfe_back.Models.Entite", b =>
                 {
                     b.Navigation("Decisions");
 
                     b.Navigation("PVs");
                 });
 
-            modelBuilder.Entity("pfe_back.Models.Decision", b =>
-                {
-                    b.Navigation("Phases");
-
-                    b.Navigation("Postes");
-                });
-
             modelBuilder.Entity("pfe_back.Models.PV", b =>
                 {
                     b.Navigation("Decision");
 
-                    b.Navigation("Postes");
+                    b.Navigation("PieceJointes");
+                });
+
+            modelBuilder.Entity("pfe_back.Models.Phase", b =>
+                {
+                    b.Navigation("DecisionPhases");
                 });
 
             modelBuilder.Entity("pfe_back.Models.Poste", b =>
@@ -745,7 +880,14 @@ namespace pfe_back.Migrations
 
             modelBuilder.Entity("pfe_back.Models.TypePoste", b =>
                 {
-                    b.Navigation("PVs");
+                    b.Navigation("Postes");
+                });
+
+            modelBuilder.Entity("pfe_back.Models.Utilisateur", b =>
+                {
+                    b.Navigation("Candidat");
+
+                    b.Navigation("MembreCommission");
                 });
 #pragma warning restore 612, 618
         }

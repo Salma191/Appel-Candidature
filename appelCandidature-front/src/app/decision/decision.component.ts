@@ -1,45 +1,90 @@
 import { Component } from '@angular/core';
 import { Breadcrumb, TableAction, TableColumn, TableComponent, TableData } from '../layout/table/table.component';
 import { SidebarComponent } from '../layout/sidebar/sidebar.component';
+import { DecisionService } from './decision.service';
+import { forkJoin } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-decision',
   imports: [
     SidebarComponent,
-    TableComponent
+    TableComponent,
+    CommonModule
   ],
   templateUrl: './decision.component.html',
   styleUrl: './decision.component.scss'
 })
 export class DecisionComponent {
+  isComiteOpen: { [rowIndex: number]: { [colKey: string]: boolean } } = {};
+  phase : string = '';
   columns: TableColumn[] = [
     { key: 'entite', label: 'Entité' },
     { key: 'dateDecision', label: 'Date Décision' },
     { key: 'refDecision', label: 'Ref. Décision' },
+    { key: 'generer', label: 'Générer Décision' },
     { key: 'statut', label: 'Statut' },
+    { key: 'dateSig', label: 'Date Signature' },
+    { key: 'cand', label: 'Max Candidats' },
+    { key: 'datePub', label: 'Date Publication' },
+    { key: 'dateLim', label: 'Limite Candidature' },
+    { key: 'phase', label: 'Phase' },
+    { key: 'signees', label: 'Pièces Signées' },
+    { key: 'supp', label: 'P.J. Supp.' },
   ];
 
   actions: TableAction[] = [
-    { name: 'edit', icon: '✏️', color: 'blue' },
-    { name: 'delete', icon: '🗑️', color: 'red' },
+    { name: 'edit', icon: 'fa fa-edit', color: 'orange' },
+    { name: 'delete', icon: 'fa fa-window-close', color: 'red' },
+    { name: 'add_attachement', icon: 'fa fa-paperclip', color: 'blue' },
+
   ];
 
   breadcrumb: Breadcrumb = {
     title: 'Gestion des PV et Décisions',
-    subTitle: 'Decisions',
+    subTitle: 'Décisions',
     name: 'Decision',
   };
 
 
-  data: TableData[] = [
-    {
-      entite: 'Entité 1',
-      dateDecision: '2023-10-01',
-      refDecision: 'REF123',
-      statut: 'Actif',
-    },
-    // Ajoutez plus de données ici
-  ];
+  data: TableData[] = [];
+
+  constructor(private decisionService: DecisionService) {  }
+
+  ngOnInit(): void {
+    this.decisionService.getAll().subscribe(
+      (response: any[]) => {
+        console.log('Réponse API:', response);
+        if (response && response.length > 0) {
+          this.data = response.map(decision => ({
+            id: decision.id,
+            entite: decision.entite['nom'],
+            dateDecision: new Date(decision.dateCreation).toISOString().split('T')[0],
+            dateSig: new Date(decision.dateSignature).toISOString().split('T')[0],
+            datePub: new Date(decision.datePublication).toISOString().split('T')[0],
+            dateLim: new Date(decision.dateLimite).toISOString().split('T')[0],
+            refDecision: decision.reference,
+            cand: decision.nbreMaxPosteCandidat,
+            type: decision.typePoste,
+            statut: decision.statut,
+            generer: '',
+            signees: [],
+            supp: [],
+            // phase: this.getPhase(decision.id)
+            
+          }));
+          this.data.forEach(decision => {
+            this.pjSignee(decision['id']);
+            this.getPhase(decision['id']);
+          });
+          console.log('Decisions chargés:', this.data);
+        }
+      },
+      error => {
+        console.error('Erreur lors du chargement des PV:', error);
+      }
+    );
+  }
 
   onActionClicked(event: { action: string; item: TableData }) {
     if (event.action === 'edit') {
@@ -48,4 +93,71 @@ export class DecisionComponent {
       console.log('Delete:', event.item);
     }
   }
+
+  toggleMenu(rowIndex: number, colKey: string) {
+    if (!this.isComiteOpen[rowIndex]) {
+      this.isComiteOpen[rowIndex] = {};
+    }
+    this.isComiteOpen[rowIndex][colKey] = !this.isComiteOpen[rowIndex][colKey];
+  }
+
+  pjSignee(id: number) {
+    this.decisionService.getDecisionPJ(id).subscribe(
+      (response: any) => {
+        console.log(`Réponse API pour Decision ${id}:`, response);
+  
+        if (response) {
+          const signeesNoms = response.signees.map((pj: any) => pj.nom).filter((nom: any) => nom);
+          const suppNoms = response.supp.map((pj: any) => pj.nom).filter((nom: any) => nom);
+  
+          // Trouver le PV correspondant dans this.data et mettre à jour ses valeurs
+          const pvIndex = this.data.findIndex(pv => pv['id'] === id);
+          if (pvIndex !== -1) {
+            this.data[pvIndex]['signees'] = signeesNoms;
+            this.data[pvIndex]['supp'] = suppNoms;
+          }
+        }
+      },
+      error => {
+        console.error(`Erreur lors du chargement des PJ pour PV ${id}:`, error);
+      }
+    );
+  }
+
+  getPhase(id: number) {
+    this.decisionService.getDecisionPhase(id).subscribe(
+      (response: any) => {
+        console.log(`Phase pour la décision ${id}:`, response);
+  
+        // Mettre à jour la phase dans l'objet correspondant de la table
+        const decisionIndex = this.data.findIndex(decision => decision['id'] === id);
+        if (decisionIndex !== -1) {
+          this.data[decisionIndex]['phase'] = response.phase;
+        }
+      },
+      (error) => {
+        console.error('Erreur API:', error);
+      }
+    );
+  }
+  
+
+  downloadPdf(id: number) {
+        forkJoin({
+          pdfBlob: this.decisionService.getDownloadUrl(id),
+          decRef: this.decisionService.getDecision(id)
+        }).subscribe(({ pdfBlob, decRef }) => {
+          const blob = new Blob([pdfBlob], { type: 'application/pdf' });
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = `Decision_${decRef.reference}.pdf`; // Personnaliser le nom du fichier ici
+          link.click();
+          window.URL.revokeObjectURL(link.href); // Nettoyer l'objet URL
+        }, error => {
+          console.error('Download error:', error);
+          // Gérer l'erreur de manière appropriée
+        });
+      }
+
+  
 }

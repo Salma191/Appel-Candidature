@@ -6,7 +6,7 @@ using pfe_back.Models;
 
 namespace pfe_back.Controllers
 {
-    [Authorize(Roles = "DAO")]
+    //[Authorize(Roles = "DAO")]
     [Route("api/[controller]")]
     [ApiController]
     public class PostesController : ControllerBase
@@ -39,6 +39,21 @@ namespace pfe_back.Controllers
             return poste;
         }
 
+        [HttpGet("type/{typeId}")]
+        public async Task<ActionResult<IEnumerable<Poste>>> GetPosteByType(int typeId)
+        {
+            var postes = await _context.Postes
+                .Where(p => p.TypePosteId == typeId)
+                .ToListAsync();
+
+            if (postes == null || !postes.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(postes);
+        }
+
         // PUT: api/Postes/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPoste(int id, Poste poste)
@@ -68,13 +83,19 @@ namespace pfe_back.Controllers
 
         // POST: api/Postes
         [HttpPost]
-        public async Task<ActionResult<Poste>> PostPoste(Poste poste)
+        public async Task<IActionResult> AddPostes(List<Poste> postes)
         {
-            _context.Postes.Add(poste);
+            if (postes == null || !postes.Any())
+            {
+                return BadRequest("La liste des postes est vide.");
+            }
+
+            _context.Postes.AddRange(postes);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPoste", new { id = poste.Id }, poste);
+            return Ok(new { message = "Postes ajoutés avec succès." });
         }
+
 
         // DELETE: api/Postes/5
         [HttpDelete("{id}")]

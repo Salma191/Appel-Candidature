@@ -14,6 +14,7 @@ namespace pfe_back.Models
         public Commission? Commission { get; set; }
 
         public int UtilisateurId { get; set; }
+        [JsonIgnore]
         public Utilisateur? Utilisateur { get; set; }
 
     }

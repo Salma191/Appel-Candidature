@@ -6,7 +6,7 @@ using pfe_back.Models;
 
 namespace pfe_back.Controllers
 {
-    [Authorize(Roles = "Administrateur")]
+    //[Authorize(Roles = "Administrateur")]
     [Route("api/[controller]")]
     [ApiController]
     public class UtilisateursController : ControllerBase
@@ -25,6 +25,15 @@ namespace pfe_back.Controllers
 
             return await _context.Utilisateurs.Include(u => u.Role).ToListAsync();
         }
+
+        [HttpGet("commission")]
+        public async Task<ActionResult<IEnumerable<Utilisateur>>> GetUtilisateursMbre()
+        {
+            return await _context.Utilisateurs
+                .Where(p => p.Role == null || p.Role.Nom == "MembreCommission")
+                .ToListAsync();
+        }
+
 
         // GET: api/Utilisateurs/5
         [HttpGet("{id}")]

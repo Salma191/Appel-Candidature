@@ -20,7 +20,6 @@ namespace pfe_back.Models
         public int? RoleId { get; set; }
         public Role? Role { get; set; }
         public Candidat? Candidat { get; set; }
-        public DAO? DAO { get; set; }
         public MembreCommission? MembreCommission { get; set; }
     }
 
