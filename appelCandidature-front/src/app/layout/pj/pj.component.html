@@ -1,0 +1,14 @@
+<div class="border p-4 rounded shadow">
+    <h3 class="text-lg font-semibold mb-2">Pièces jointes</h3>
+  
+    <ul *ngIf="piecesJointes.length > 0; else noPj">
+      <li *ngFor="let pj of piecesJointes" class="mb-1">
+        📄 {{ pj.nom }} <span class="text-sm text-gray-500">({{ pj.type }})</span>
+      </li>
+    </ul>
+  
+    <ng-template #noPj>
+      <p class="text-sm text-gray-600 italic">Aucune pièce jointe pour cette entité.</p>
+    </ng-template>
+  </div>
+  

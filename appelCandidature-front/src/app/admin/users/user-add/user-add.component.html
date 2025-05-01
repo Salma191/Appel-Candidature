@@ -1,0 +1,39 @@
+<div id="crud-modal" tabindex="-1" [class.hidden]="!isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-white/50 backdrop-blur-sm">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-3xl">
+      <div class="flex items-center justify-between p-4 border-b border-gray-100">
+        <h3 class="text-lg font-semibold">{{ title }}</h3>
+        <button (click)="close()" class="text-gray-400 hover:text-gray-800">
+          <svg class="w-4 h-4" viewBox="0 0 14 14" fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
+        </button>
+      </div>
+      <form (ngSubmit)="submitForm()" class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <label for="nom" class="block mb-2 text-sm font-medium text-gray-700">Nom</label>
+          <input id="nom" name="nom" [(ngModel)]="nom" required class="w-full border border-gray-100 rounded p-2" />
+        </div>
+        <div>
+          <label for="prenom" class="block mb-2 text-sm font-medium text-gray-700">Prénom</label>
+          <input id="prenom" name="prenom" [(ngModel)]="prenom" required class="w-full border border-gray-100 rounded p-2" />
+        </div>
+        <div>
+          <label for="email" class="block mb-2 text-sm font-medium text-gray-700">Email</label>
+          <input id="email" name="email" type="email" [(ngModel)]="email" required class="w-full border border-gray-100 rounded p-2" />
+        </div>
+        <div>
+          <label for="role" class="block mb-2 text-sm font-medium text-gray-700">Rôle</label>
+          <select id="role" name="role" [(ngModel)]="selectedRole" required class="w-full border border-gray-100 rounded p-2">
+            <option value="" disabled>Choisir un rôle</option>
+            <option *ngFor="let role of roles" [value]="role.id">{{ role.nom }}</option>
+          </select>
+        </div>
+        <div>
+          <label for="password" class="block mb-2 text-sm font-medium text-gray-700">Password</label>
+          <input id="password" name="password" type="password" [(ngModel)]="password" required class="w-full border border-gray-100 rounded p-2" />
+        </div>
+        <div class="sm:col-span-2 flex justify-end space-x-3 pt-4">
+          <button type="button" (click)="close()" class="px-4 py-2 border border-gray-100 rounded">Annuler</button>
+          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">{{ confirmText }}</button>
+        </div>
+      </form>
+    </div>
+</div>

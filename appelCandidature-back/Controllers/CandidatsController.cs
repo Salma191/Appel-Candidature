@@ -42,8 +42,23 @@ namespace pfe_back.Controllers
             return candidat;
         }
 
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<Candidat>> GetCandidatUser(int userId)
+        {
+            var candidat = await _context.Candidats
+                .Include(c => c.Utilisateur)
+                .Include(e => e.Experiences)
+                .Include(d => d.Diplomes)
+                .FirstOrDefaultAsync(c => c.UtilisateurId == userId);
+
+            if (candidat == null)
+                return NotFound();  
+
+            return Ok(candidat);
+
+        }
+
         // PUT: api/Candidats/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("update-candidat/{userId}")]
         public async Task<IActionResult> PutCandidat(int userId, Candidat candidatModel)
         {
@@ -78,7 +93,6 @@ namespace pfe_back.Controllers
 
 
         // POST: api/Candidats
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Candidat>> PostCandidat(Candidat candidat)
         {

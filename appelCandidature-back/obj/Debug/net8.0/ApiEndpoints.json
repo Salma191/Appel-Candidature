@@ -17,6 +17,22 @@
   },
   {
     "ContainingType": "pfe_back.Controllers.AuthController",
+    "Method": "SendWelcomeMail",
+    "RelativePath": "api/Auth/recheck/{id}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.AuthController",
     "Method": "Register",
     "RelativePath": "api/Auth/register",
     "HttpMethod": "POST",
@@ -32,13 +48,602 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "pfe_back.Controllers.DecisionsController",
-    "Method": "GetDecision",
-    "RelativePath": "api/Decisions",
+    "ContainingType": "pfe_back.Controllers.AuthController",
+    "Method": "VerifyEmail",
+    "RelativePath": "api/Auth/verify-email",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "token",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidatsController",
+    "Method": "GetCandidats",
+    "RelativePath": "api/Candidats",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Candidat, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidatsController",
+    "Method": "PostCandidat",
+    "RelativePath": "api/Candidats",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "candidat",
+        "Type": "pfe_back.Models.Candidat",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Candidat",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidatsController",
+    "Method": "GetCandidat",
+    "RelativePath": "api/Candidats/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Candidat",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidatsController",
+    "Method": "DeleteCandidat",
+    "RelativePath": "api/Candidats/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidatsController",
+    "Method": "PutCandidat",
+    "RelativePath": "api/Candidats/update-candidat/{userId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "candidatModel",
+        "Type": "pfe_back.Models.Candidat",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidatsController",
+    "Method": "GetCandidatUser",
+    "RelativePath": "api/Candidats/user/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Candidat",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidaturesController",
+    "Method": "GetCandidatures",
+    "RelativePath": "api/Candidatures",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Candidature, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidaturesController",
+    "Method": "AddPJ",
+    "RelativePath": "api/Candidatures/{candidatureid}/pj",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "candidatureid",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "pieceJointe",
+        "Type": "pfe_back.Models.PieceJointe",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.PieceJointe",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidaturesController",
+    "Method": "GetCandidature",
+    "RelativePath": "api/Candidatures/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Candidature",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidaturesController",
+    "Method": "PutCandidature",
+    "RelativePath": "api/Candidatures/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "candidature",
+        "Type": "pfe_back.Models.Candidature",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidaturesController",
+    "Method": "DeleteCandidature",
+    "RelativePath": "api/Candidatures/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidaturesController",
+    "Method": "FinaliserCandidature",
+    "RelativePath": "api/Candidatures/{id}/finaliser",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidaturesController",
+    "Method": "GetCandidaturePJ",
+    "RelativePath": "api/Candidatures/{id}/pj",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.PieceJointe, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidaturesController",
+    "Method": "Postuler",
+    "RelativePath": "api/Candidatures/demarrer",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "pfe_back.Models.Candidature",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidaturesController",
+    "Method": "GetMyCanditures",
+    "RelativePath": "api/Candidatures/mes-candidatures",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Candidature, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidaturesController",
+    "Method": "PreviewPJ",
+    "RelativePath": "api/Candidatures/pj/preview/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CandidaturesController",
+    "Method": "GetCandidatureByPoste",
+    "RelativePath": "api/Candidatures/poste/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CommissionsController",
+    "Method": "GetCommissions",
+    "RelativePath": "api/Commissions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Commission, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CommissionsController",
+    "Method": "CreateCommission",
+    "RelativePath": "api/Commissions",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "commission",
+        "Type": "pfe_back.Models.Commission",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CommissionsController",
+    "Method": "GetCommission",
+    "RelativePath": "api/Commissions/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Commission",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CommissionsController",
+    "Method": "PutCommission",
+    "RelativePath": "api/Commissions/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "commission",
+        "Type": "pfe_back.Models.Commission",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.CommissionsController",
+    "Method": "DeleteCommission",
+    "RelativePath": "api/Commissions/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.DecisionPhasesController",
+    "Method": "GetDecisionPhases",
+    "RelativePath": "api/DecisionPhases",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.DecisionPhase, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.DecisionPhasesController",
+    "Method": "PostDecisionPhase",
+    "RelativePath": "api/DecisionPhases",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "decisionPhase",
+        "Type": "pfe_back.Models.DecisionPhase",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.DecisionPhase",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.DecisionPhasesController",
+    "Method": "GetDecisionPhase",
+    "RelativePath": "api/DecisionPhases/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.DecisionPhase",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.DecisionPhasesController",
+    "Method": "PutDecisionPhase",
+    "RelativePath": "api/DecisionPhases/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "decisionPhase",
+        "Type": "pfe_back.Models.DecisionPhase",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.DecisionPhasesController",
+    "Method": "DeleteDecisionPhase",
+    "RelativePath": "api/DecisionPhases/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.DecisionPhasesController",
+    "Method": "GetDecisionByPhase",
+    "RelativePath": "api/DecisionPhases/parPhase/{phaseId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "phaseId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Decision, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
@@ -52,22 +657,36 @@
     ]
   },
   {
-    "ContainingType": "pfe_back.Controllers.DecisionsController",
-    "Method": "PostDecision",
-    "RelativePath": "api/Decisions",
-    "HttpMethod": "POST",
+    "ContainingType": "pfe_back.Controllers.DecisionPhasesController",
+    "Method": "GetPostePub",
+    "RelativePath": "api/DecisionPhases/postePublier",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "decision",
-        "Type": "pfe_back.Models.Decision",
-        "IsRequired": true
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "pfe_back.Models.Decision",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Poste, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.DecisionsController",
+    "Method": "GetDecision",
+    "RelativePath": "api/Decisions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Decision, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -118,7 +737,7 @@
       },
       {
         "Name": "decision",
-        "Type": "pfe_back.Models.Decision",
+        "Type": "pfe_back.DTOs.DecisionDto",
         "IsRequired": true
       }
     ],
@@ -141,16 +760,16 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "pfe_back.Controllers.ExperienceController",
-    "Method": "Get",
-    "RelativePath": "api/Experience",
+    "ContainingType": "pfe_back.Controllers.DecisionsController",
+    "Method": "GetAppel",
+    "RelativePath": "api/Decisions/appel",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Decision, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -161,57 +780,9 @@
     ]
   },
   {
-    "ContainingType": "pfe_back.Controllers.ExperienceController",
-    "Method": "Post",
-    "RelativePath": "api/Experience",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "value",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "pfe_back.Controllers.ExperienceController",
-    "Method": "Get",
-    "RelativePath": "api/Experience/{id}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.String",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "pfe_back.Controllers.ExperienceController",
-    "Method": "Put",
-    "RelativePath": "api/Experience/{id}",
+    "ContainingType": "pfe_back.Controllers.DecisionsController",
+    "Method": "PutDecisionEnt",
+    "RelativePath": "api/Decisions/entretienPhase/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -222,24 +793,18 @@
         "IsRequired": true
       },
       {
-        "Name": "value",
-        "Type": "System.String",
+        "Name": "decision",
+        "Type": "pfe_back.DTOs.DecisionDto",
         "IsRequired": true
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
-    "ContainingType": "pfe_back.Controllers.ExperienceController",
-    "Method": "Delete",
-    "RelativePath": "api/Experience/{id}",
-    "HttpMethod": "DELETE",
+    "ContainingType": "pfe_back.Controllers.DecisionsController",
+    "Method": "GetPhase",
+    "RelativePath": "api/Decisions/phase/{id}",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -251,11 +816,814 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "System.Void",
-        "MediaTypes": [],
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.DecisionsController",
+    "Method": "AddPJ",
+    "RelativePath": "api/Decisions/pj/{decisionid}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "decisionid",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "pieceJointe",
+        "Type": "pfe_back.Models.PieceJointe",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.PieceJointe",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.DecisionsController",
+    "Method": "GetPJ",
+    "RelativePath": "api/Decisions/pj/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.DecisionsController",
+    "Method": "PreviewPJ",
+    "RelativePath": "api/Decisions/pj/preview/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.DecisionsController",
+    "Method": "AddPJSignee",
+    "RelativePath": "api/Decisions/signe/{decisionid}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "decisionid",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "pieceJointe",
+        "Type": "pfe_back.Models.PieceJointe",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.PieceJointe",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.DiplomesController",
+    "Method": "GetDiplomes",
+    "RelativePath": "api/Diplomes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Diplome, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.DiplomesController",
+    "Method": "PostDiplome",
+    "RelativePath": "api/Diplomes",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "diplome",
+        "Type": "pfe_back.Models.Diplome",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Diplome",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.DiplomesController",
+    "Method": "GetDiplome",
+    "RelativePath": "api/Diplomes/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Diplome",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.DiplomesController",
+    "Method": "PutDiplome",
+    "RelativePath": "api/Diplomes/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "diplome",
+        "Type": "pfe_back.Models.Diplome",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.DiplomesController",
+    "Method": "DeleteDiplome",
+    "RelativePath": "api/Diplomes/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.EntitesController",
+    "Method": "GetEntites",
+    "RelativePath": "api/Entites",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Entite, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.EntitesController",
+    "Method": "PostEntite",
+    "RelativePath": "api/Entites",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "entite",
+        "Type": "pfe_back.Models.Entite",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Entite",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.EntitesController",
+    "Method": "GetEntite",
+    "RelativePath": "api/Entites/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Entite",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.EntitesController",
+    "Method": "PutEntite",
+    "RelativePath": "api/Entites/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "entite",
+        "Type": "pfe_back.Models.Entite",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.EntitesController",
+    "Method": "DeleteEntite",
+    "RelativePath": "api/Entites/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.ExperiencesController",
+    "Method": "GetExperiences",
+    "RelativePath": "api/Experiences",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Experience, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.ExperiencesController",
+    "Method": "PostExperience",
+    "RelativePath": "api/Experiences",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "experience",
+        "Type": "pfe_back.Models.Experience",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Experience",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.ExperiencesController",
+    "Method": "GetExperience",
+    "RelativePath": "api/Experiences/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Experience",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.ExperiencesController",
+    "Method": "PutExperience",
+    "RelativePath": "api/Experiences/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "experience",
+        "Type": "pfe_back.Models.Experience",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.ExperiencesController",
+    "Method": "DeleteExperience",
+    "RelativePath": "api/Experiences/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.MembreCommissionsController",
+    "Method": "GetMembreCommissions",
+    "RelativePath": "api/MembreCommissions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.MembreCommission, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.MembreCommissionsController",
+    "Method": "PostMembreCommission",
+    "RelativePath": "api/MembreCommissions",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "membreCommission",
+        "Type": "pfe_back.Models.MembreCommission",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.MembreCommission",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.MembreCommissionsController",
+    "Method": "GetMembreCommission",
+    "RelativePath": "api/MembreCommissions/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.MembreCommission",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.MembreCommissionsController",
+    "Method": "PutMembreCommission",
+    "RelativePath": "api/MembreCommissions/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "membreCommission",
+        "Type": "pfe_back.Models.MembreCommission",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.MembreCommissionsController",
+    "Method": "DeleteMembreCommission",
+    "RelativePath": "api/MembreCommissions/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.MembreCommissionsController",
+    "Method": "GetRoleCommission",
+    "RelativePath": "api/MembreCommissions/role",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.OrganigrammesController",
+    "Method": "GetOrganigramme",
+    "RelativePath": "api/Organigrammes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Organigramme, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.OrganigrammesController",
+    "Method": "PostOrganigramme",
+    "RelativePath": "api/Organigrammes",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "organigramme",
+        "Type": "pfe_back.Models.Organigramme",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Organigramme",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.OrganigrammesController",
+    "Method": "GetOrganigramme",
+    "RelativePath": "api/Organigrammes/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Organigramme",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.OrganigrammesController",
+    "Method": "PutOrganigramme",
+    "RelativePath": "api/Organigrammes/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "organigramme",
+        "Type": "pfe_back.Models.Organigramme",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.OrganigrammesController",
+    "Method": "DeleteOrganigramme",
+    "RelativePath": "api/Organigrammes/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.OrganigrammesController",
+    "Method": "GetPosteByTypeAndEntite",
+    "RelativePath": "api/Organigrammes/entite/{entiteId}/type/{typeId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "entiteId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "typeId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Poste, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.PhasesController",
+    "Method": "GetPhases",
+    "RelativePath": "api/Phases",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Phase, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.PhasesController",
+    "Method": "PostPhase",
+    "RelativePath": "api/Phases",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "phase",
+        "Type": "pfe_back.Models.Phase",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Phase",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.PhasesController",
+    "Method": "GetPhase",
+    "RelativePath": "api/Phases/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Phase",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.PhasesController",
+    "Method": "PutPhase",
+    "RelativePath": "api/Phases/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "phase",
+        "Type": "pfe_back.Models.Phase",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.PhasesController",
+    "Method": "DeletePhase",
+    "RelativePath": "api/Phases/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "pfe_back.Controllers.PostesController",
@@ -279,29 +1647,19 @@
   },
   {
     "ContainingType": "pfe_back.Controllers.PostesController",
-    "Method": "PostPoste",
+    "Method": "AddPostes",
     "RelativePath": "api/Postes",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "poste",
-        "Type": "pfe_back.Models.Poste",
+        "Name": "postes",
+        "Type": "System.Collections.Generic.List\u00601[[pfe_back.Models.Poste, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "IsRequired": true
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "pfe_back.Models.Poste",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "pfe_back.Controllers.PostesController",
@@ -365,6 +1723,192 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.PostesController",
+    "Method": "getPosteActive",
+    "RelativePath": "api/Postes/appel",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.PostesController",
+    "Method": "getPosteByDecision",
+    "RelativePath": "api/Postes/byDecision/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Poste, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.PostesController",
+    "Method": "GetPosteByTypeAndEntite",
+    "RelativePath": "api/Postes/entite/{entiteId}/type/{typeId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "entiteId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "typeId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Poste, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.Postes\u00C0PostulerController",
+    "Method": "GetPostes\u00C0Postuler",
+    "RelativePath": "api/Postes\u00C0Postuler",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Postes\u00C0Postuler, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.Postes\u00C0PostulerController",
+    "Method": "GetPostes\u00C0Postuler",
+    "RelativePath": "api/Postes\u00C0Postuler/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Postes\u00C0Postuler",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.Postes\u00C0PostulerController",
+    "Method": "PutPostes\u00C0Postuler",
+    "RelativePath": "api/Postes\u00C0Postuler/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "postes\u00C0Postuler",
+        "Type": "pfe_back.Models.Postes\u00C0Postuler",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.Postes\u00C0PostulerController",
+    "Method": "DeletePostes\u00C0Postuler",
+    "RelativePath": "api/Postes\u00C0Postuler/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.Postes\u00C0PostulerController",
+    "Method": "PostPostes\u00C0Postuler",
+    "RelativePath": "api/Postes\u00C0Postuler/{posteId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "posteId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Postes\u00C0Postuler",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "pfe_back.Controllers.PVsController",
@@ -452,8 +1996,8 @@
         "IsRequired": true
       },
       {
-        "Name": "pV",
-        "Type": "pfe_back.Models.PV",
+        "Name": "pieceJointe",
+        "Type": "pfe_back.Models.PieceJointe",
         "IsRequired": true
       }
     ],
@@ -463,6 +2007,339 @@
     "ContainingType": "pfe_back.Controllers.PVsController",
     "Method": "DeletePV",
     "RelativePath": "api/PVs/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.PVsController",
+    "Method": "GetArchivePV",
+    "RelativePath": "api/PVs/archive",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.PV, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.PVsController",
+    "Method": "putPVArchive",
+    "RelativePath": "api/PVs/archive/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.PVsController",
+    "Method": "GeneratePdf",
+    "RelativePath": "api/PVs/generate/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.PVsController",
+    "Method": "GetPJ",
+    "RelativePath": "api/PVs/pj/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.PVsController",
+    "Method": "AddPJ",
+    "RelativePath": "api/PVs/pj/{pvid}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pvid",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "pieceJointe",
+        "Type": "pfe_back.Models.PieceJointe",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.PieceJointe",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.PVsController",
+    "Method": "PreviewPJ",
+    "RelativePath": "api/PVs/pj/preview/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.RolesController",
+    "Method": "GetRoles",
+    "RelativePath": "api/Roles",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Role, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.RolesController",
+    "Method": "PostRole",
+    "RelativePath": "api/Roles",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "role",
+        "Type": "pfe_back.Models.Role",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Role",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.RolesController",
+    "Method": "GetRole",
+    "RelativePath": "api/Roles/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.Role",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.RolesController",
+    "Method": "PutRole",
+    "RelativePath": "api/Roles/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "role",
+        "Type": "pfe_back.Models.Role",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.RolesController",
+    "Method": "DeleteRole",
+    "RelativePath": "api/Roles/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.TypePostesController",
+    "Method": "GetTypePostes",
+    "RelativePath": "api/TypePostes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.TypePoste, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.TypePostesController",
+    "Method": "PostTypePoste",
+    "RelativePath": "api/TypePostes",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "typePoste",
+        "Type": "pfe_back.Models.TypePoste",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.TypePoste",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.TypePostesController",
+    "Method": "GetTypePoste",
+    "RelativePath": "api/TypePostes/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "pfe_back.Models.TypePoste",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.TypePostesController",
+    "Method": "PutTypePoste",
+    "RelativePath": "api/TypePostes/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "typePoste",
+        "Type": "pfe_back.Models.TypePoste",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.TypePostesController",
+    "Method": "DeleteTypePoste",
+    "RelativePath": "api/TypePostes/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -583,5 +2460,25 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "pfe_back.Controllers.UtilisateursController",
+    "Method": "GetUtilisateursMbre",
+    "RelativePath": "api/Utilisateurs/commission",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[pfe_back.Models.Utilisateur, pfe_back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   }
 ]

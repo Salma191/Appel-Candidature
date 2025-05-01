@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using pfe_back.Data;
 using pfe_back.Models;
+using pfe_back.DTOs;
+using pfe_back.Services;
 
 namespace pfe_back.Controllers
 {
@@ -23,17 +25,43 @@ namespace pfe_back.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Decision>>> GetDecision()
         {
-            return await _context.Decisions
-                .Include(p => p.Entite)
-                .Include(p => p.PieceJointes)
+
+            try
+            {
+                return await _context.Decisions
+                    .Include(p => p.Entite)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (you can use a logging framework)
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal server error. Please try again later.");
+            }
+}
+
+        [HttpGet("appel")]
+        public async Task<ActionResult<IEnumerable<Decision>>> GetAppel()
+        {
+            var appel = await _context.Decision
+                 .Include(d => d.Entite)
+                .Include(d => d.Postes!)
+                    .ThenInclude(d => d.TypePoste)
+                .Where(d => d.Statut == "Lancée")
                 .ToListAsync();
+
+            return appel;
         }
 
         // GET: api/Decisions/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Decision>> GetDecision(int id)
         {
-            var decision = await _context.Decisions.FindAsync(id);
+            var decision = await _context.Decisions
+                .Include(d => d.Entite)
+                .Include(d => d.Postes)
+                    .ThenInclude(d => d.TypePoste)
+                .FirstOrDefaultAsync(d => d.Id == id);
 
             if (decision == null)
             {
@@ -89,11 +117,92 @@ namespace pfe_back.Controllers
 
         // PUT: api/Decisions/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDecision(int id, Decision decision)
+        public async Task<IActionResult> PutDecision(int id, DecisionDto decision)
+            {
+                var dec = await _context.Decisions
+                    .Include(d => d.DecisionPhases)
+                    .ThenInclude(dp => dp.Phase)
+                    .FirstOrDefaultAsync(d => d.Id == id);
+
+                if (dec == null)
+                {
+                    Console.WriteLine($"🚨 Décision {id} non trouvée !");
+                    return NotFound();
+                }
+
+                Console.WriteLine($"🔄 Mise à jour de la décision {id} avec statut {dec.Statut}");
+
+                if (dec.Statut == "Signée")
+                {
+                    dec.DatePublication = DateTime.UtcNow;
+                    dec.DateLimite = decision.DateLimite;
+                    Console.WriteLine($"📅 Date de publication définie : {dec.DatePublication}");
+
+                    // Désactivation de la phase "Draft"
+                    var draftPhase = dec.DecisionPhases.FirstOrDefault(p => p.Phase?.Nom == NomPhase.Draft);
+                    if (draftPhase != null)
+                    {
+                        draftPhase.Statut = "Désactivé";
+                        draftPhase.DateFin = DateTime.UtcNow;
+                        _context.Entry(draftPhase).State = EntityState.Modified;
+                        Console.WriteLine($"❌ Phase 'Draft' désactivée");
+                    }
+
+                    // Vérifier si la phase "Lancement" existe déjà
+                    var lancementPhase = dec.DecisionPhases.FirstOrDefault(p => p.Phase?.Nom == NomPhase.Preselection);
+                    if (lancementPhase == null)
+                    {
+                        // Vérifier si la phase "Lancement" existe dans la base
+                        var existingPhase = await _context.Phases.FirstOrDefaultAsync(p => p.Nom == NomPhase.Preselection);
+
+                        lancementPhase = new DecisionPhase
+                        {
+                            DateDebut = DateTime.UtcNow,
+                            Statut = "Activé",
+                            Phase = existingPhase ?? new Phase { Nom = NomPhase.Preselection }, // Réutiliser la phase existante si elle existe
+                            DecisionId = dec.Id
+                        };
+
+                        dec.DecisionPhases.Add(lancementPhase); // Ajouter à la décision
+                        await _context.DecisionPhases.AddAsync(lancementPhase);
+                        Console.WriteLine($"✅ Phase 'Lancement' ajoutée");
+                    }
+
+                    // Mise à jour du statut de la décision
+                    dec.Statut = "Lancée";
+                    _context.Entry(dec).State = EntityState.Modified;
+
+                    // Sauvegarde unique des changements
+                    try
+                    {
+                        Console.WriteLine("💾 Sauvegarde des modifications...");
+                        await _context.SaveChangesAsync();
+                        Console.WriteLine("✅ Sauvegarde réussie !");
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        Console.WriteLine("⚠️ Erreur de mise à jour concurrentielle");
+                        if (!DecisionExists(id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                }
+
+                return NoContent();
+            }
+
+
+        [HttpPut("entretienPhase/{id}")]
+        public async Task<IActionResult> PutDecisionEnt(int id, DecisionDto decision)
         {
             var dec = await _context.Decisions
                 .Include(d => d.DecisionPhases)
-                .ThenInclude(dp => dp.Phase) // Assurer le chargement des phases
+                .ThenInclude(dp => dp.Phase)
                 .FirstOrDefaultAsync(d => d.Id == id);
 
             if (dec == null)
@@ -104,44 +213,40 @@ namespace pfe_back.Controllers
 
             Console.WriteLine($"🔄 Mise à jour de la décision {id} avec statut {dec.Statut}");
 
-            if (dec.Statut == "Signé")
+            if (dec.Statut == "Lancée")
             {
-                dec.DatePublication = DateTime.UtcNow;
-                dec.DateLimite = dec.DatePublication?.AddDays(21);
-                Console.WriteLine($"📅 Date de publication définie : {dec.DatePublication}");
 
-                // Désactivation de la phase "Draft"
-                var draftPhase = dec.DecisionPhases.FirstOrDefault(p => p.Phase?.Nom == NomPhase.Draft);
-                if (draftPhase != null)
+                // Désactivation de la phase "Preselection"
+                var preselectionPhase = dec.DecisionPhases.FirstOrDefault(p => p.Phase?.Nom == NomPhase.Preselection);
+                if (preselectionPhase != null)
                 {
-                    draftPhase.Statut = "Désactivé";
-                    draftPhase.DateFin = DateTime.UtcNow;
-                    _context.Entry(draftPhase).State = EntityState.Modified;
-                    Console.WriteLine($"❌ Phase 'Draft' désactivée");
+                    preselectionPhase.Statut = "Désactivé";
+                    preselectionPhase.DateFin = DateTime.UtcNow;
+                    _context.Entry(preselectionPhase).State = EntityState.Modified;
+                    Console.WriteLine($"❌ Phase 'Preselection' désactivée");
                 }
 
-                // Vérifier si la phase "Lancement" existe déjà
-                var lancementPhase = dec.DecisionPhases.FirstOrDefault(p => p.Phase?.Nom == NomPhase.Lancement);
-                if (lancementPhase == null)
+                // Vérifier si la phase "Entretien" existe déjà
+                var entretienPhase = dec.DecisionPhases.FirstOrDefault(p => p.Phase?.Nom == NomPhase.Entretien);
+                if (entretienPhase == null)
                 {
-                    // Vérifier si la phase "Lancement" existe dans la base
-                    var existingPhase = await _context.Phases.FirstOrDefaultAsync(p => p.Nom == NomPhase.Lancement);
+                    // Vérifier si la phase "Entretien" existe dans la base
+                    var existingPhase = await _context.Phases.FirstOrDefaultAsync(p => p.Nom == NomPhase.Entretien);
 
-                    lancementPhase = new DecisionPhase
+                    entretienPhase = new DecisionPhase
                     {
                         DateDebut = DateTime.UtcNow,
                         Statut = "Activé",
-                        Phase = existingPhase ?? new Phase { Nom = NomPhase.Lancement }, // Réutiliser la phase existante si elle existe
+                        Phase = existingPhase ?? new Phase { Nom = NomPhase.Entretien }, // Réutiliser la phase existante si elle existe
                         DecisionId = dec.Id
                     };
 
-                    dec.DecisionPhases.Add(lancementPhase); // Ajouter à la décision
-                    await _context.DecisionPhases.AddAsync(lancementPhase);
-                    Console.WriteLine($"✅ Phase 'Lancement' ajoutée");
+                    dec.DecisionPhases.Add(entretienPhase); // Ajouter à la décision
+                    await _context.DecisionPhases.AddAsync(entretienPhase);
+                    Console.WriteLine($"✅ Phase 'Entretien' ajoutée");
                 }
 
                 // Mise à jour du statut de la décision
-                dec.Statut = "Lancée";
                 _context.Entry(dec).State = EntityState.Modified;
 
                 // Sauvegarde unique des changements
@@ -167,7 +272,6 @@ namespace pfe_back.Controllers
 
             return NoContent();
         }
-
 
 
         [HttpPost("pj/{decisionid}")]
@@ -217,15 +321,42 @@ namespace pfe_back.Controllers
         {
             var pjs = await _context.PieceJointes
                 .Where(p => p.DecisionId == id)
+                .Select(pj => new {pj.Id, pj.Nom, pj.Type })
                 .ToListAsync();
 
             var result = new
             {
-                Signees = pjs.Where(p => p.Type == TypePJ.Signée).ToList(),
-                Supp = pjs.Where(p => p.Type == TypePJ.Supp).ToList()
+                Signees = pjs.Where(p => p.Type == TypePJ.Signée).Select(pj => new { pj.Id ,pj.Nom}).ToList(),
+                Supp = pjs.Where(p => p.Type == TypePJ.Supp).Select(pj => new { pj.Id, pj.Nom }).ToList()
             };
 
-            return Ok(result); // Retourne un objet contenant deux listes
+            return Ok(result);
+        }
+
+        [HttpGet("pj/preview/{id}")]
+        public async Task<IActionResult> PreviewPJ(int id)
+        {
+            var pj = await _context.PieceJointes
+                       .Where(p => p.Id == id)
+                       .Select(p => new { p.Nom, p.Fichier })
+                       .FirstOrDefaultAsync();
+
+            if (pj == null)
+                return NotFound();
+
+            byte[] bytes;
+            try
+            {
+                bytes = Convert.FromBase64String(pj.Fichier);
+            }
+            catch
+            {
+                return BadRequest("Invalid Base64 data");
+            }
+
+            var mime = "application/pdf";
+
+            return File(bytes, mime, fileDownloadName: pj.Nom, enableRangeProcessing: true);
         }
 
 
@@ -237,10 +368,16 @@ namespace pfe_back.Controllers
                 .Where(p => p.DecisionId == id && p.Statut == "Activé")
                 .FirstOrDefaultAsync();
 
-            var result = decPhase?.Phase?.Nom.ToString();
+            if (decPhase == null || decPhase.Phase == null)
+            {
+                return Ok(new { phase = "Décision en Draft" });
+            }
 
-            return Ok(new { phase = result });
+            var phaseName = EnumUtils.GetEnumDisplayName(decPhase.Phase.Nom);
+
+            return Ok(new { phase = phaseName });
         }
+
 
         // DELETE: api/Decisions/5
         [HttpDelete("{id}")]
@@ -262,5 +399,9 @@ namespace pfe_back.Controllers
         {
             return _context.Decisions.Any(e => e.Id == id);
         }
+
+
+
     }
+
 }

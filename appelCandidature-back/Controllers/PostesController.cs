@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using pfe_back.Data;
 using pfe_back.Models;
+using pfe_back.Services;
 
 namespace pfe_back.Controllers
 {
@@ -22,14 +23,19 @@ namespace pfe_back.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Poste>>> GetPoste()
         {
-            return await _context.Postes.ToListAsync();
+            return await _context.Postes
+                .Include(p => p.Entite)
+                .Include(p => p.TypePoste)
+                .ToListAsync();
         }
 
         // GET: api/Postes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Poste>> GetPoste(int id)
         {
-            var poste = await _context.Postes.FindAsync(id);
+            var poste = await _context.Postes
+                .Include(p => p.TypePoste)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             if (poste == null)
             {
@@ -39,11 +45,11 @@ namespace pfe_back.Controllers
             return poste;
         }
 
-        [HttpGet("type/{typeId}")]
-        public async Task<ActionResult<IEnumerable<Poste>>> GetPosteByType(int typeId)
+        [HttpGet("entite/{entiteId}/type/{typeId}")]
+        public async Task<ActionResult<IEnumerable<Poste>>> GetPosteByTypeAndEntite(int entiteId, int typeId)
         {
             var postes = await _context.Postes
-                .Where(p => p.TypePosteId == typeId)
+                .Where(p => p.EntiteId == entiteId && p.TypePosteId == typeId)
                 .ToListAsync();
 
             if (postes == null || !postes.Any())
@@ -52,6 +58,77 @@ namespace pfe_back.Controllers
             }
 
             return Ok(postes);
+        }
+
+        [HttpGet("byDecision/{id}")]
+        public async Task<ActionResult<IEnumerable<Poste>>> getPosteByDecision(int id)
+        {
+            var postes = await _context.Postes
+                .Include(p => p.Decisions)
+                .Include(p => p.Entite)
+                .Include(p => p.TypePoste)
+                .Include(p => p.Candidatures)
+                .Where(p => p.Decisions.Any(d => d.Id == id))
+                .ToListAsync();
+
+            if (postes == null || !postes.Any())
+            {
+                return NotFound();
+            }
+
+            var result = new List<object>();
+
+            foreach (var poste in postes)
+            {
+                result.Add(new
+                {
+                    poste.Id,
+                    poste.NumeroUnique,
+                    TypePosteNom = poste.TypePoste?.Nom,
+                    EntiteNom = poste.Entite?.Nom,
+                    Candidatures = poste.Candidatures?.Count()
+                });
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("appel")]
+        public async Task<ActionResult<IEnumerable<object>>> getPosteActive()
+        {
+            var postes = await _context.Postes
+                .Include(p => p.Decisions)
+                .Include(p => p.Entite)
+                .Include(p => p.TypePoste)
+                .Include(p => p.Candidatures)
+                .Where(p => p.Decisions.Any(d => d.Statut == "Lancée"))
+                .ToListAsync();
+
+            if (postes == null || !postes.Any())
+            {
+                return NotFound();
+            }
+
+            var result = new List<object>();
+
+            foreach (var poste in postes)
+            {
+
+                var decisionLancee = poste.Decisions.FirstOrDefault(d => d.Statut == "Lancé");
+
+                result.Add(new
+                {
+                    poste.Id,
+                    poste.Description,
+                    poste.Exigence,
+                    poste.Critere,
+                    poste.NumeroUnique,
+                    DateLimite = decisionLancee?.DateLimite
+
+                });
+            }
+
+            return Ok(result);
         }
 
         // PUT: api/Postes/5

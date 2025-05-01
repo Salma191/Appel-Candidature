@@ -1,0 +1,97 @@
+<div id="crud-modal" tabindex="-1" 
+     [class.hidden]="!isOpen"
+     class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center md:inset-0 h-[calc(100%-1rem)] bg-opacity-50 backdrop-blur-sm flex">
+  <div class="relative bg-white rounded-lg shadow-lg w-full max-w-3xl mx-auto">
+    <!-- Modal content -->
+    <div class="relative bg-white rounded-lg shadow">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between p-4 lg:p-2 rounded-t">
+        <h3 class="text-lg font-semibold text-gray-900">
+          {{ title }}
+        </h3>
+        <button type="button" 
+                (click)="close()"
+                class="text-gray-400 bg-transparent shadow hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Stepper -->
+      <ol class="flex items-center w-full mb-4 ml-[112px] sm:mb-5">
+        <li class="flex items-center w-full ml-4">
+          <div [ngClass]="{
+                'bg-blue-600 text-white': currentStep === 1,
+                'bg-gray-100 text-gray-900': currentStep !== 1
+              }"
+              class="flex items-center justify-center w-10 h-10 rounded-full lg:h-12 lg:w-12 shrink-0 z-10">
+            1
+          </div>
+          <div class="w-full h-1 bg-gray-200"
+               [ngClass]="{'bg-blue-600': currentStep > 1}">
+          </div>
+        </li>
+        <li class="flex items-center w-full">
+          <div [ngClass]="{
+                'bg-blue-600 text-white': currentStep === 2,
+                'bg-gray-100 text-gray-900': currentStep !== 2
+              }"
+              class="flex items-center justify-center w-10 h-10 rounded-full lg:h-12 lg:w-12 shrink-0 z-10">
+            2
+          </div>
+        </li>
+      </ol>
+  
+      <!-- Step 1 -->
+      <form *ngIf="currentStep === 1" (ngSubmit)="nextStep()" class="max-w-5xl mx-auto p-4 pt-6 bg-white rounded-md">
+        <div class="grid gap-6 mb-4 grid-cols-2">
+          <div class="col-span-2">
+            <label class="block mb-2 text-sm font-medium text-gray-900">Décision Signé (PDF)</label>
+            <div class="relative">
+              <!-- Champ de fichier avec opacité réduite et couleur discrète -->
+              <input id="file_input" type="file"
+                     (change)="onFileSelected($event)"
+                     class="relative w-full p-4 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition text-sm text-gray-900 bg-gray-50 focus:outline-none opacity-60 hover:opacity-80">
+              
+              <!-- Afficher le nom du fichier dans un champ de texte si sélectionné -->
+              <div *ngIf="fileSelected" class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-600 text-sm z-50">
+                <span class="truncate max-w-full">{{ fileSelected }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <button type="submit"
+                  class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5">
+            Étape Suivante
+          </button>
+        </div>
+      </form>
+      
+      
+  
+      <!-- Step 2 -->
+      <form *ngIf="currentStep === 2" (ngSubmit)="confirm()" class="max-w-5xl mx-auto p-4 pt-6 bg-white rounded-md">
+        <div class="grid gap-6 mb-4 grid-cols-2">
+          <div class="col-span-2">
+            <label class="block mb-2 text-sm font-medium text-gray-900">Date limite</label>
+            <input type="date" [(ngModel)]="deadline" name="deadline"
+                   required
+                   class="w-full p-2.5 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500">
+          </div>
+        </div>
+        <div class="flex justify-between">
+          <button type="button" (click)="previousStep()"
+                  class="text-gray-700 border border-gray-300 rounded-lg px-5 py-2.5 hover:bg-gray-100">
+            Retour
+          </button>
+          <button type="submit"
+                  class="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5">
+            Lancer la décision
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

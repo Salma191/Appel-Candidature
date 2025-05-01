@@ -58,8 +58,24 @@ namespace pfe_back.Controllers
             return Ok(decPhase);
         }
 
+        [HttpGet("postePublier")]
+        public async Task<ActionResult<IEnumerable<Poste>>> GetPostePub()
+        {
+            var postes = await _context.DecisionPhases
+               .Include(p => p.Decision)
+                .ThenInclude(d => d.Postes)
+               .Where(p => p.Statut == "Activé" && p.Phase.Nom == NomPhase.Preselection)
+               .Select((p => new
+               {
+                   DecisionRef = p.Decision.Reference,
+                   Postes = p.Decision.Postes
+               }))
+               .ToListAsync();
+
+            return Ok(postes);
+        }
+
         // PUT: api/DecisionPhases/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDecisionPhase(int id, DecisionPhase decisionPhase)
         {
@@ -90,7 +106,6 @@ namespace pfe_back.Controllers
         }
 
         // POST: api/DecisionPhases
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<DecisionPhase>> PostDecisionPhase(DecisionPhase decisionPhase)
         {

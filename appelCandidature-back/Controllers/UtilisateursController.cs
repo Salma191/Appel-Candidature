@@ -41,6 +41,7 @@ namespace pfe_back.Controllers
         {
             var utilisateur = await _context.Utilisateurs
                 .Include(u => u.Role)
+                .Include(u => u.Candidat)
                 .FirstOrDefaultAsync(u => u.Id == id);
 
             if (utilisateur == null)

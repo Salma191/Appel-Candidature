@@ -12,7 +12,7 @@ using pfe_back.Models;
 
 namespace pfe_back.Controllers
 {
-    [Authorize(Roles = "DAO")]
+    //[Authorize(Roles = "DAO")]
     [Route("api/[controller]")]
     [ApiController]
     public class CommissionsController : ControllerBase
@@ -31,6 +31,7 @@ namespace pfe_back.Controllers
         {
             return await _context.Commissions
                 .Include(u => u.MembreCommissions)
+                     .ThenInclude(u => u.Utilisateur)
                 .ToListAsync();
         }
 

@@ -1,0 +1,103 @@
+<div id="crud-modal" tabindex="-1" 
+     [class.hidden]="!isOpen"
+     class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center md:inset-0 h-[calc(100%-1rem)] bg-opacity-50 backdrop-blur-sm flex">
+    <div class="relative bg-white rounded-lg shadow-lg w-full max-w-3xl mx-auto"> <!-- Updated max-width -->
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 lg:p-2 rounded-t">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    {{ title }}
+                </h3>
+                <button type="button" 
+                        (click)="close()"
+                        class="text-gray-400 bg-transparent shadow hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form class="max-w-5xl mx-auto p-4 pt-6 bg-white rounded-md"> <!-- Width increased here -->
+                <div class="grid gap-6 mb-4 grid-cols-2 w-full max-w-5xl mx-auto"> <!-- Updated max-width -->
+                    <div class="col-span-2 sm:col-span-1">
+                        <!-- Champ Ref -->
+                        <label for="ref" class="block mb-2 text-sm font-medium text-gray-900">Référence</label>
+                        <input type="text"
+                               [(ngModel)]="ref" 
+                               name="ref" 
+                               id="ref"
+                               class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3" 
+                               placeholder="Entrez le référence" 
+                               required>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <!-- Champ Entite -->
+                        <label for="entite" class="block mb-2 text-sm font-medium text-gray-900">Entite</label>
+                        <select [(ngModel)]="selectedEntite" name="entite" class="border border-gray-300 rounded-lg p-2 w-full">
+                            <option value="">Choisir une entité</option>
+                            <option *ngFor="let entite of entites" [value]="entite.id">{{ entite.nom }}</option>
+                            
+                        </select>
+                    </div>
+                
+
+                    <div class="col-span-2 sm:col-span-1">
+                        <!-- Champ Type de poste -->
+                        <label for="type" class="block mb-2 text-sm font-medium text-gray-900">Type de poste</label>
+                        <select [(ngModel)]="selectedType" name="type" (change)="onTypeChange()" class="border border-gray-300 rounded-lg p-2 w-full">
+                            <option value="">Choisir un type de poste</option>
+                            <option *ngFor="let type of types" [value]="type.id">{{ type.nom }}</option>
+                        </select>
+                    </div>
+            
+                    <div class="col-span-2">
+                        <label for="postes" class="block mb-2 text-sm font-medium text-gray-900">Postes</label>
+
+                        <app-multi-select-postes
+                            [items]='postes'
+                            (selectionChange)="onSelectionChange($event)">
+                        </app-multi-select-postes>
+
+                    </div>
+                    <div class="col-span-2">
+                        <label for="users" class="block mb-2 text-sm font-medium text-gray-900">Membre de commission</label>
+
+                        <app-multi-select-users
+                            [items]='users'
+                            (selectionChange)="onSelectionChangeU($event)">
+                        </app-multi-select-users>
+
+                    </div>
+                    <div class="col-span-2 flex flex-nowrap gap-4 justify-center items-center overflow-auto"> 
+                        <div *ngFor="let user of selectedUsers" class="min-w-[100px]">
+                            <label for="role-{{ user.id }}" class="block mb-2 text-sm font-medium text-gray-900">
+                                Role pour {{ user.nom }} {{ user.prenom }}
+                            </label>
+                            <select [(ngModel)]="user.role" name="role-{{ user.id }}" 
+                                    class="border border-gray-300 rounded-lg p-2 w-full">
+                                <option value="" selected>Choisir un rôle</option>
+                                <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+              </form>
+            <!-- Modal footer -->
+            <div class="flex items-center justify-between p-4 lg:p-5 rounded-b">
+                <button (click)="submitForm()"
+                        type="button" 
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"> 
+                    {{ confirmText }}
+                </button>
+                <button (click)="close()"
+                        type="button" 
+                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">
+                    Annuler
+                </button>
+            </div>
+        </div> 
+    </div>
+</div>

@@ -1,28 +1,39 @@
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { AccueilComponent } from './accueil/accueil.component';
 import { NgModule } from '@angular/core';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { PvComponent } from './pv/pv.component';
-import { DecisionComponent } from './decision/decision.component';
-import { OrganigrammeComponent } from './organigramme/organigramme.component';
-import { PvAddComponent } from './pv/pv-add/pv-add.component';
-import { DecisionDraftComponent } from './decision/decision-draft/decision-draft.component';
+
+import { LoginComponent } from './pages/login/login.component';
+import { AccueilComponent } from './pages/accueil/accueil.component';
+import { SignupComponent } from './pages/signup/signup.component';
+import { DaoRoutingModule } from './dao/dao-routing.module';
+import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
+import { VerificationSuccessComponent } from './pages/verification-success/verification-success.component';
+import { CandidatRoutingModule } from './candidat/candidat-routing.module';
+import { OrgComponent } from './pages/accueil/org/org.component';
+import { AdminRoutingModule } from './admin/admin-routing.module';
+
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: '', component: AccueilComponent },
-    { path: 'dashboard', component: DashboardComponent },
-    { path: 'pv', component: PvComponent },
-    { path: 'decision', component: DecisionComponent },
-    { path: 'org', component: OrganigrammeComponent },
-    { path: 'pv-add', component: PvAddComponent},
-    { path: 'decision-draft', component: DecisionDraftComponent},
+    { path: 'org', component: OrgComponent },
+    { path: 'sign-up', component: SignupComponent},
+    { path: 'verify-email', component: EmailVerificationComponent },
+    { path: 'success', component: VerificationSuccessComponent},
+
+    { path: 'dao', loadChildren: () => import('./dao/dao.module').then(m => m.DaoModule) },
+    { path: 'candidat', loadChildren: () => import('./candidat/candidat.module').then(m => m.CandidatModule) },
+    { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
+
+
 
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [RouterModule.forRoot(routes),
+        DaoRoutingModule,
+        CandidatRoutingModule,
+        AdminRoutingModule
+    ],
     exports: [RouterModule]
 })
 export class AppRoutingModule { }

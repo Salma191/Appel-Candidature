@@ -1,0 +1,123 @@
+<!-- decision-detail.component.html -->
+<app-sidebar></app-sidebar>
+<app-table>
+  <ng-container *ngIf="decision; else loading">
+    <div class="p-6 bg-white rounded-lg shadow-lg">
+      <button (click)="goBack()" class="text-gray-600 hover:underline mb-4">
+        &larr; Retour
+      </button>
+
+      <h1 class="text-2xl font-bold text-gray-900 mb-6">
+        Vérification – <span class="text-blue-600">{{ decision.reference }}</span>
+      </h1>
+
+      <!-- Info rapide -->
+      <dl class="grid grid-cols-4 gap-6 mb-8">
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Entité</dt>
+          <dd class="mt-1 text-lg font-semibold text-gray-800">{{ decision.entite }}</dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Créée le</dt>
+          <dd class="mt-1 text-lg font-semibold text-gray-800">{{ decision.dateCreation | date:'yyyy-MM-dd' }}</dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Limite dépôt</dt>
+          <dd class="mt-1 text-lg font-semibold text-gray-800">{{ decision.dateLimite | date:'yyyy-MM-dd' }}</dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-500">Statut</dt>
+          <dd class="mt-1 text-lg font-semibold text-gray-800">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
+              {{ decision.statut }}
+            </span>
+          </dd>
+        </div>
+      </dl>
+
+      <!-- Timeline -->
+      <nav aria-label="Progress" class="mb-8">
+        <ol class="flex items-center justify-between">
+          <li *ngFor="let p of ['Lancement','Dépôt','Vérification','Entretiens','Publication']; let i = index" class="flex-1 relative">
+            <div class="flex items-center">
+              <div
+                [ngClass]="{
+                  'bg-green-600': i < phaseIndex(),
+                  'bg-blue-600': i === phaseIndex(),
+                  'bg-gray-300 text-gray-600': i > phaseIndex()
+                }"
+                class="flex items-center justify-center h-8 w-8 rounded-full text-white">
+                <i *ngIf="i < phaseIndex()" class="fas fa-check"></i>
+                <i *ngIf="i === phaseIndex()" class="fas fa-spinner fa-pulse"></i>
+                <span *ngIf="i > phaseIndex()" class="text-sm font-medium text-gray-700">{{ i + 1 }}</span>
+              </div>
+              <span
+                [ngClass]="{
+                  'text-gray-600': i > phaseIndex(),
+                  'text-gray-900': i <= phaseIndex()
+                }"
+                class="ml-3 text-sm font-medium">
+                {{ p }}
+              </span>
+            </div>
+            <div *ngIf="i < 4" class="absolute top-4 left-1/2 right-0 h-px bg-gray-200"></div>
+          </li>
+        </ol>
+      </nav>
+
+      <!-- Récap chiffré -->
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        <div class="p-4 bg-white rounded shadow">
+          <div class="text-sm text-gray-500">Postes totaux</div>
+          <div class="text-2xl font-bold">{{ stats.total }}</div>
+        </div>
+        <div class="p-4 bg-white rounded shadow">
+          <div class="text-sm text-gray-500">Dossiers incomplets</div>
+          <div class="text-2xl font-bold">{{ stats.incomplete }}</div>
+        </div>
+        <div class="p-4 bg-white rounded shadow">
+          <div class="text-sm text-gray-500">Dossiers validés</div>
+          <div class="text-2xl font-bold">{{ stats.validated }}</div>
+        </div>
+      </div>
+
+      <!-- Liste des postes -->
+      <div class="overflow-auto rounded-lg border border-gray-200 shadow-md">
+        <table class="w-full table-auto text-left text-sm">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-2 font-medium text-gray-900">Intitulé</th>
+              <th class="px-4 py-2 font-medium text-gray-900">Type</th>
+              <th class="px-4 py-2 font-medium text-gray-900">Candidats</th>
+              <th class="px-4 py-2 font-medium text-gray-900">% validés</th>
+              <th class="px-4 py-2 font-medium text-gray-900">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr *ngFor="let poste of postes" class="hover:bg-gray-50">
+              <td class="px-4 py-2">{{ poste.intitule }}</td>
+              <td class="px-4 py-2">{{ poste.type }}</td>
+              <td class="px-4 py-2">{{ poste.candidatsTotal }}</td>
+              <td class="px-4 py-2">
+                {{ (poste.candidatsValides / poste.candidatsTotal * 100) | number:'1.0-0' }}%
+              </td>
+              <td class="px-4 py-2">
+                <button (click)="onTraiter(poste)"
+                        class="px-2 py-1 bg-blue-500 text-white rounded text-sm">
+                  Traiter
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Loading fallback -->
+  <ng-template #loading>
+    <div class="p-6 text-center text-gray-500">
+      Chargement de la décision...
+    </div>
+  </ng-template>
+</app-table>
