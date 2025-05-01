@@ -1,0 +1,71 @@
+<app-sidebar></app-sidebar>
+
+<app-table class="p-6 bg-gray-50 min-h-screen">
+  <div class="max-w-4xl mx-auto">
+    <h2 class="text-3xl font-bold text-gray-800 mb-8">Mes Candidatures</h2>
+
+    <ng-container *ngIf="candidatures.length > 0; else emptyState">
+      <div class="space-y-6">
+        <div
+          *ngFor="let c of candidatures"
+          class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden transition hover:shadow-md"
+        >
+          <!-- En‑tête cliquable -->
+          <button
+            type="button"
+            class="w-full flex items-center justify-between px-6 py-4 focus:outline-none"
+            (click)="c.isOpen = !c.isOpen"
+          >
+            <div>
+              <p class="text-xl font-semibold text-gray-900">{{ c.poste }}</p>
+              <p class="text-sm text-gray-500">Réf décision : {{ c.decision }}</p>
+            </div>
+
+            <div class="flex items-center space-x-4">
+              <!-- Badge d'état -->
+              <span
+                class="px-3 py-1 rounded-full text-sm font-medium"
+                [ngClass]="{
+                  'bg-green-100 text-green-800': c.etat === 'ACCEPTEE',
+                  'bg-red-100 text-red-800': c.etat === 'REFUSEE',
+                  'bg-yellow-100 text-yellow-800': c.etat === 'EN_ATTENTE'
+                }"
+              >
+                {{ c.etat }}
+              </span>
+
+              <!-- Chevron rotatif -->
+              <svg
+                class="w-5 h-5 text-gray-400 transform transition-transform duration-200"
+                [class.rotate-180]="c.isOpen"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </button>
+
+          <!-- Contenu dépliable -->
+          <div
+            *ngIf="c.isOpen"
+            class="px-6 pb-5 bg-gray-50 text-gray-700 space-y-2 text-sm"
+          >
+            <p><strong>Numéro d'enregistrement :</strong> {{ c.num }}</p>
+            <p><strong>Date de postulation :</strong> {{ c.dateCandidature }}</p>
+            <p><strong>État :</strong> {{ c.etat }}</p>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- État vide -->
+    <ng-template #emptyState>
+      <div class="py-16 text-center text-gray-500">
+        Aucune candidature soumise pour le moment.
+      </div>
+    </ng-template>
+  </div>
+</app-table>

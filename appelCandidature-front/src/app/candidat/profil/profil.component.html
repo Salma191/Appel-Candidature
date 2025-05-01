@@ -1,0 +1,150 @@
+<app-sidebar></app-sidebar>
+<div *ngIf="user" class="min-h-screen bg-gray-100 py-8">
+  <div class="container mx-auto px-4 space-y-8">
+
+    <!-- En-tête du profil -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-4">
+        <img
+          [src]="user.photoUrl || defaultAvatar"
+          alt="Photo de profil"
+          class="w-28 h-28 rounded-full object-cover shadow-md border-2 border-blue-500"
+        />
+        <div>
+          <h1 class="text-3xl font-bold text-gray-800">{{ user.nom }} {{ user.prenom }}</h1>
+          <p class="text-gray-500">{{ user.email }}</p>
+        </div>
+      </div>
+      <div class="relative" (clickOutside)="actionsOpen = false">
+        <button
+          (click)="actionsOpen = !actionsOpen"
+          class="p-2 hover:bg-gray-200 rounded-full transition"
+          aria-label="Actions du profil"
+        >
+          <i class="fas fa-ellipsis-v text-gray-600"></i>
+        </button>
+      
+        <div
+          *ngIf="actionsOpen"
+          class="absolute right-0 mt-2 w-44 bg-white shadow-lg rounded-md overflow-hidden z-10"
+        >
+          <button
+            (click)="openProfileEditForm()"
+            class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+          >
+            ✏️ Modifier le profil
+          </button>
+          <button
+            (click)="openAddExperienceForm()"
+            class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+          >
+            ➕ Ajouter expérience
+          </button>
+          <button
+            (click)="openAddDiplomeForm()"
+            class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+          >
+            ➕ Ajouter diplôme
+          </button>
+        </div>
+      </div>
+      
+      
+    </div>
+
+    <!-- Complétion -->
+    <div class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Complétion du profil</h2>
+      <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+        <div
+          class="bg-blue-600 h-4 text-xs text-white text-center transition-all"
+          [style.width]="completion + '%'"
+        >
+          {{ completion }}%
+        </div>
+      </div>
+    </div>
+
+    <!-- Informations personnelles -->
+    <section class="bg-white rounded-xl shadow overflow-hidden">
+      <header class="px-6 py-4 border-l-4 border-blue-600">
+        <h3 class="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+          <i class="fas fa-user text-blue-600"></i> Informations personnelles
+        </h3>
+      </header>
+      <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
+        <p><strong>Nom :</strong> {{ user.nom }}</p>
+        <p><strong>Prénom :</strong> {{ user.prenom }}</p>
+        <p><strong>Email :</strong> {{ user.email }}</p>
+        <p><strong>Téléphone :</strong> {{ user.telephone || '—' }}</p>
+        <p><strong>Adresse :</strong> {{ user.adresse || '—' }}</p>
+        <p><strong>Code Postal :</strong> {{ user.codePostal || '—' }}</p>
+        <p><strong>Ville :</strong> {{ user.ville || '—' }}</p>
+        <p><strong>Pays :</strong> {{ user.pays || '—' }}</p>
+        <p><strong>Affectation :</strong> {{ user.affectationActuelle || '—' }}</p>
+        <p><strong>Poste :</strong> {{ user.posteOccupe || '—' }}</p>
+        <p><strong>Retraite :</strong> {{ user.dateRetraite | date:'longDate' }}</p>
+      </div>
+    </section>
+
+    <!-- Diplômes -->
+    <section class="bg-white rounded-xl shadow overflow-hidden">
+      <header class="px-6 py-4 border-l-4 border-green-600">
+        <h3 class="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+          <i class="fas fa-graduation-cap text-green-600"></i> Diplômes
+        </h3>
+      </header>
+      <div class="p-6 space-y-3">
+        <ng-container *ngIf="user.diplomes?.length; else noDiplomes">
+          <div
+            *ngFor="let d of user.diplomes"
+            class="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:bg-green-50 transition"
+          >
+            <i class="fas fa-check-circle text-green-500"></i>
+            <span class="font-medium">{{ d.nom }}</span>
+            <span class="text-gray-500 ml-auto">{{ d.annee }}</span>
+          </div>
+        </ng-container>
+        <ng-template #noDiplomes>
+          <p class="text-gray-500 italic">Aucun diplôme renseigné.</p>
+        </ng-template>
+      </div>
+    </section>
+
+    <!-- Expériences -->
+    <section class="bg-white rounded-xl shadow overflow-hidden">
+      <header class="px-6 py-4 border-l-4 border-indigo-600">
+        <h3 class="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+          <i class="fas fa-briefcase text-indigo-600"></i> Expériences
+        </h3>
+      </header>
+      <div class="p-6 space-y-6">
+        <ng-container *ngIf="user.experiences?.length; else noExperiences">
+          <div *ngFor="let exp of user.experiences" class="space-y-2">
+            <div class="flex items-baseline gap-2">
+              <span class="font-medium">{{ exp.poste }}</span>
+              <span class="text-gray-500">— {{ exp.entreprise }}</span>
+              <span class="ml-auto text-sm text-gray-400">{{ exp.duree }}</span>
+            </div>
+            <p class="text-gray-600">{{ exp.description }}</p>
+          </div>
+        </ng-container>
+        <ng-template #noExperiences>
+          <p class="text-gray-500 italic">Aucune expérience renseignée.</p>
+        </ng-template>
+      </div>
+    </section>
+
+    <!-- CV -->
+    <div class="text-center">
+      <a
+        [href]="user.cvUrl"
+        target="_blank"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700 transition"
+      >
+        <i class="fas fa-download"></i> Télécharger mon CV
+      </a>
+    </div>
+
+  </div>
+</div>

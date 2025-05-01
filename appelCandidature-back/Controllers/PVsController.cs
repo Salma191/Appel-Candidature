@@ -46,7 +46,7 @@ namespace pfe_back.Controllers
                 .Include(p => p.Commission)
                 .Include(p => p.Postes)
                 .Include(P => P.Entite)
-                .Include(p => p.PieceJointes)
+                .Where(p => p.Statut != "Archivé")
                 .ToListAsync();
 
             if (pvs == null || pvs.Count == 0)
@@ -58,7 +58,7 @@ namespace pfe_back.Controllers
 
             foreach (var pv in pvs)
             {
-                var commissionPresident = await _commissionService.GetPresidentNameByCommissionId(pv.CommissionId);
+                var commissionPresident = await _commissionService.GetMembreOfCommission(pv.CommissionId);
                 result.Add(new
                 {
                     pv.Id,
@@ -67,9 +67,8 @@ namespace pfe_back.Controllers
                     pv.Statut,
                     pv.Reference,
                     TypePoste = pv.TypePoste?.Nom,
-                    CommissionPresident = commissionPresident,
-                    pv.Postes,
-                    pv.PieceJointes
+                    Commission = commissionPresident,
+                    pv.Postes
                 });
             }
 
@@ -82,6 +81,10 @@ namespace pfe_back.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PV>> GetPV(int id)
         {
+            if (!PVExists(id))
+            {
+                return NotFound();
+            }
             var pV = await _context.PVs.FindAsync(id);
 
             if (pV == null)
@@ -95,8 +98,13 @@ namespace pfe_back.Controllers
 
         // PUT: api/PVs/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPV(int id, UpdatePVRequest pV)
+        public async Task<IActionResult> PutPV(int id, [FromBody] PieceJointe pieceJointe)
         {
+            if (!PVExists(id))
+            {
+                return NotFound();
+            }
+
             var pv = await _context.PVs
                 .Include(p => p.TypePoste)
                 .Include(p => p.Postes)
@@ -114,23 +122,23 @@ namespace pfe_back.Controllers
 
 
             // Vérifier si une nouvelle pièce jointe est fournie
-            if (pV.PieceJointe != null)
+            if (pieceJointe != null)
             {
-                var pieceJointe = new PieceJointe
+                var pj = new PieceJointe
                 {
-                    Nom = pV.PieceJointe.Nom,
-                    Fichier = pV.PieceJointe.Fichier,
+                    Nom = pieceJointe.Nom,
+                    Fichier = pieceJointe.Fichier,
                     Type = TypePJ.Signée,
                     PVId = pv.Id
                 };
-                pv.PieceJointes.Add(pieceJointe);
+                pv.PieceJointes.Add(pj);
             }
 
             // Sauvegarde avant la création de la décision
             await _context.SaveChangesAsync();
 
             // Vérifier si le PV est bien "Signée" avant de créer la décision
-            if (pv.Statut != "Signée")
+            if (pv.Statut != "Approuvé")
             {
                 throw new Exception("La décision ne peut être créée que si le PV est signé.");
             }
@@ -155,7 +163,6 @@ namespace pfe_back.Controllers
         [HttpPost]
         public async Task<ActionResult<PV>> PostPV(PV pV)
         {
-            // Vérification du type de poste
             var typePoste = await _context.TypePostes.FindAsync(pV.TypePosteId);
             if (typePoste == null)
             {
@@ -166,7 +173,6 @@ namespace pfe_back.Controllers
                 Console.WriteLine($"Type de poste trouvé: {typePoste.Nom}");
             }
 
-            // Vérification de l'entité
             var entite = await _context.Entites.FindAsync(pV.EntiteId);
             if (entite == null)
             {
@@ -177,7 +183,6 @@ namespace pfe_back.Controllers
                 Console.WriteLine($"Entité trouvée: {entite.Nom}");
             }
 
-            // Vérification de la commission
             if (pV.Commission == null)
             {
                 return BadRequest("La commission ne peut pas être nulle.");
@@ -193,7 +198,6 @@ namespace pfe_back.Controllers
                 return BadRequest("La commission doit avoir exactement 4 membres.");
             }
 
-            // Création de la commission et récupération de l'ID
             var commissionId = await _commissionService.CreateCommissionAsync(pV.Commission);
             if (commissionId == 0)
             {
@@ -202,14 +206,11 @@ namespace pfe_back.Controllers
             pV.CommissionId = commissionId;
             Console.WriteLine($"Commission créée avec l'ID: {commissionId}");
 
-            // Suppression de la référence à la commission pour éviter une double création
             pV.Commission = null;
 
-            // Initialisation des autres propriétés du PV
             pV.DateCreation = DateTime.UtcNow;
             pV.Statut = "Draft";
 
-            // Vérification des postes associés
             if (pV.Postes != null)
             {
                 var postesExistants = await _context.Postes
@@ -233,7 +234,6 @@ namespace pfe_back.Controllers
                     }
                 }
 
-                // Si tous les postes sont valides, on les associe au PV
                 pV.Postes = postesExistants;
             }
             else
@@ -241,7 +241,6 @@ namespace pfe_back.Controllers
                 Console.WriteLine("Aucun poste associé au PV.");
             }
 
-            // Ajout du PV à la base de données
             _context.PVs.Add(pV);
 
             try
@@ -254,7 +253,6 @@ namespace pfe_back.Controllers
                 return BadRequest($"Erreur lors de la sauvegarde du PV: {ex.Message}");
             }
 
-            // Retour de la réponse après succès
             return CreatedAtAction("GetPV", new { id = pV.Id }, pV);
         }
 
@@ -321,9 +319,34 @@ namespace pfe_back.Controllers
                 Supp = pjs.Where(p => p.Type == TypePJ.Supp).ToList()
             };
 
-            return Ok(result); // Retourne un objet contenant deux listes
+            return Ok(result);
         }
 
+        [HttpGet("pj/preview/{id}")]
+        public async Task<IActionResult> PreviewPJ(int id)
+        {
+            var pj = await _context.PieceJointes
+                       .Where(p => p.Id == id)
+                       .Select(p => new { p.Nom, p.Fichier })
+                       .FirstOrDefaultAsync();
+
+            if (pj == null)
+                return NotFound();
+
+            byte[] bytes;
+            try
+            {
+                bytes = Convert.FromBase64String(pj.Fichier);
+            }
+            catch
+            {
+                return BadRequest("Invalid Base64 data");
+            }
+
+            var mime = "application/pdf";
+
+            return File(bytes, mime, fileDownloadName: pj.Nom, enableRangeProcessing: true);
+        }
 
 
         // DELETE: api/PVs/5
@@ -374,7 +397,7 @@ namespace pfe_back.Controllers
                 // ✅ Ajouter le contenu principal du document
                 document.Add(new Paragraph("📄 Procès-Verbal de Lancement").SetMarginTop(50));
                 document.Add(new Paragraph("Date : " + pv.DateCreation.ToString("dd/MM/yyyy")).SetMarginBottom(10));
-                document.Add(new Paragraph("Comité des Nominations : " + await _commissionService.GetPresidentNameByCommissionId(pv.CommissionId)));
+                document.Add(new Paragraph("Comité des Nominations : " + await _commissionService.GetMembreOfCommission(pv.CommissionId)));
                 document.Add(new Paragraph("Référence de la Décision : " + pv.Reference));
                 document.Add(new Paragraph("Entité du PV : " + pv.Entite?.Nom));
 
@@ -400,6 +423,64 @@ namespace pfe_back.Controllers
             }
         }
 
+        [HttpGet("archive")]
+        public async Task<ActionResult<IEnumerable<PV>>> GetArchivePV()
+        {
+            var pvs = await _context.PVs
+                .Include(p => p.TypePoste)
+                .Include(p => p.Commission)
+                .Include(p => p.Postes)
+                .Include(P => P.Entite)
+                .Include(p => p.PieceJointes)
+                .Where(p => p.Statut == "Archivé")
+                .ToListAsync();
+
+            if (pvs == null || pvs.Count == 0)
+            {
+                return NotFound();
+            }
+
+            var result = new List<object>();
+
+            foreach (var pv in pvs)
+            {
+                var commissionPresident = await _commissionService.GetMembreOfCommission(pv.CommissionId);
+                result.Add(new
+                {
+                    pv.Id,
+                    Entite = pv.Entite?.Nom,
+                    pv.DateCreation,
+                    pv.Statut,
+                    pv.Reference,
+                    TypePoste = pv.TypePoste?.Nom,
+                    CommissionPresident = commissionPresident,
+                    pv.Postes,
+                    pv.PieceJointes
+                });
+            }
+
+            return Ok(result);
+
+        }
+
+        [HttpPut("archive/{id}")]
+        public async Task<IActionResult> putPVArchive(int id)
+        {
+            var pv = await _context.PVs
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (pv == null)
+            {
+                return NotFound();
+            }
+
+            pv.Statut = "Archivé";
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+
+        }
 
 
         private bool PVExists(int id)
@@ -408,29 +489,3 @@ namespace pfe_back.Controllers
         }
     }
 }
-
-//if (User?.Identity?.IsAuthenticated != true)
-//{
-//    return Unauthorized("Utilisateur non authentifié.");
-//}
-
-//    // Récupérer l'email depuis les revendications
-// var emailClaim = User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
-
-//// Si l'email n'est pas trouvé, retourner une erreur
-//if (string.IsNullOrEmpty(emailClaim))
-//{
-//    return Unauthorized("Email de l'utilisateur introuvable.");
-//}
-
-//// Charger l'utilisateur à partir de l'email
-//var utilisateurConnecte = await _context.Utilisateurs
-//    .Include(u => u.Role)
-//    .FirstOrDefaultAsync(u => u.Email == emailClaim);
-
-//if (utilisateurConnecte == null || utilisateurConnecte.Role?.Nom != "DAO")
-//{
-//    return BadRequest("Seuls les DAO peuvent créer un PV.");
-//} else
-//{
-//    Ok(new { Id = utilisateurConnecte.Id });

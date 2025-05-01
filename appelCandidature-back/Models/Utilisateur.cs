@@ -19,6 +19,7 @@ namespace pfe_back.Models
 
         public int? RoleId { get; set; }
         public Role? Role { get; set; }
+        [JsonIgnore]
         public Candidat? Candidat { get; set; }
         public MembreCommission? MembreCommission { get; set; }
     }

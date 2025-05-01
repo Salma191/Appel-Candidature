@@ -15,7 +15,6 @@ namespace pfe_back.Data
         public DbSet<Commission> Commissions { get; set; }
         public DbSet<Decision> Decisions { get; set; }
         public DbSet<Diplome> Diplomes { get; set; }
-        public DbSet<Document> Documents { get; set; }
         public DbSet<Experience> Experiences { get; set; }
         public DbSet<MembreCommission> MembreCommissions { get; set; }
         public DbSet<Notification> Notifications { get; set; }
@@ -28,6 +27,7 @@ namespace pfe_back.Data
         public DbSet<Utilisateur> Utilisateurs { get; set; }
         public DbSet<PieceJointe> PieceJointes { get; set; }
         public DbSet<DecisionPhase> DecisionPhases { get; set; }
+        public DbSet<Organigramme> Organigrammes { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -61,7 +61,7 @@ namespace pfe_back.Data
                 .HasForeignKey(f => f.CandidatId);
 
             modelBuilder.Entity<Candidature>()
-                .HasMany(c => c.Documents)
+                .HasMany(c => c.PieceJointes)
                 .WithOne(d => d.Candidature)
                 .HasForeignKey(f => f.CandidatureId);
 
@@ -128,23 +128,22 @@ namespace pfe_back.Data
         .HasOne(pj => pj.PV)
         .WithMany(p => p.PieceJointes)
         .HasForeignKey(pj => pj.PVId)
-        .OnDelete(DeleteBehavior.Cascade); // Supprime les pièces jointes si le PV est supprimé
+        .OnDelete(DeleteBehavior.Cascade); 
 
             modelBuilder.Entity<PieceJointe>()
-        .HasOne(pj => pj.Decision) // Chaque PieceJointe a une décision
-        .WithMany(d => d.PieceJointes) // Une décision a plusieurs pièces jointes
-        .HasForeignKey(pj => pj.DecisionId) // Clé étrangère vers DecisionId
-        .OnDelete(DeleteBehavior.Restrict); // Ou .OnDelete(DeleteBehavior.Cascade) selon tes besoins
+        .HasOne(pj => pj.Decision)
+        .WithMany(d => d.PieceJointes) 
+        .HasForeignKey(pj => pj.DecisionId)
+        .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Decision>()
-                .HasMany(d => d.PieceJointes) // Une décision peut avoir plusieurs pièces jointes
-                .WithOne(pj => pj.Decision) // Chaque pièce jointe appartient à une décision
-                .HasForeignKey(pj => pj.DecisionId) // Clé étrangère vers PieceJointe
-                .OnDelete(DeleteBehavior.Restrict); // Ou .OnDelete(DeleteBehavior.Cascade) selon tes besoins
-                                                    // Empêche la suppression automatique
+                .HasMany(d => d.PieceJointes)
+                .WithOne(pj => pj.Decision)
+                .HasForeignKey(pj => pj.DecisionId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DecisionPhase>()
-        .HasKey(dp => new { dp.DecisionId, dp.PhaseId }); // Clé composite
+        .HasKey(dp => new { dp.DecisionId, dp.PhaseId });
 
             modelBuilder.Entity<DecisionPhase>()
                 .HasOne(dp => dp.Decision)
@@ -156,6 +155,11 @@ namespace pfe_back.Data
                 .WithMany(p => p.DecisionPhases)
                 .HasForeignKey(dp => dp.PhaseId);
 
+            modelBuilder.Entity<Poste>()
+                .HasOne(d => d.Entite)
+                .WithMany(p => p.Postes)
+                .HasForeignKey(p => p.EntiteId);
+
 
             modelBuilder.Entity<Role>().HasData(
                 new Role { Id = 1, Nom = "Administrateur" },
@@ -164,11 +168,24 @@ namespace pfe_back.Data
                 new Role { Id = 4, Nom = "MembreCommission" }
             );
 
+
+
+            //modelBuilder.Entity<TypePoste>().HasData(
+            //    new TypePoste { Id = 1, Nom = "Service" },
+            //    new TypePoste { Id = 2, Nom = "Division" },
+            //    new TypePoste { Id = 3, Nom = "Direction" },
+            //    new TypePoste { Id = 4, Nom = "Département" },  
+            //    new TypePoste { Id = 5, Nom = "Pôle" }
+
+            //    );
+
         }
 
 
         public DbSet<pfe_back.Models.Poste> Poste { get; set; } = default!;
         public DbSet<pfe_back.Models.Decision> Decision { get; set; } = default!;
         public DbSet<pfe_back.Models.PV> PV { get; set; } = default!;
+        public DbSet<pfe_back.Models.PostesÀPostuler> PostesÀPostuler { get; set; } = default!;
+        public DbSet<pfe_back.Models.Organigramme> Organigramme { get; set; } = default!;
     }
 }

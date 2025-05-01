@@ -1,6 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using iText.IO.Util;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using pfe_back.Data;
 using pfe_back.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace pfe_back.Services
 {
@@ -49,24 +53,40 @@ namespace pfe_back.Services
             }
 
             await _context.Commissions.AddAsync(commiss);
-            await _context.SaveChangesAsync(); // Un seul appel pour ajouter et mettre à jour
+            await _context.SaveChangesAsync();  
 
-            // Mise à jour du nom sans re-créer l'entité
+            // Mise à jour du nom sans re-créer l'entité  
             commiss.Nom = $"Commission {commiss.Id}";
-            _context.Commissions.Update(commiss); // Assure le suivi de l'entité
+            _context.Commissions.Update(commiss);  
             await _context.SaveChangesAsync();
 
             return commiss.Id;
         }
 
-        public async Task<string?> GetPresidentNameByCommissionId(int commissionId)
+        public async Task<IEnumerable<object>> GetMembreOfCommission(int commissionId)
         {
-            var president = await _context.MembreCommissions
-                .Include(mc => mc.Utilisateur) // Inclure les infos de l'utilisateur
-                .FirstOrDefaultAsync(mc => mc.CommissionId == commissionId && mc.RoleCommission == RoleCommission.Président);
+            var membres = await _context.MembreCommissions
+                .Where(mc => mc.CommissionId == commissionId)
+                .Select(mc => new
+                {
+                    mc.RoleCommission,
+                    Utilisateur = _context.Utilisateurs
+                        .Where(u => u.Id == mc.UtilisateurId)
+                        .Select(u => new { u.Prenom, u.Nom })
+                        .FirstOrDefault()
+                })
+                .ToListAsync();
 
-            return president?.Utilisateur?.Nom; // Récupérer le nom si l'utilisateur existe
+            var result = membres.Select(res => new
+            {
+                Prenom = res.Utilisateur?.Prenom ?? "Inconnu",
+                Nom = res.Utilisateur?.Nom ?? "Inconnu",
+                RoleCommission = EnumUtils.GetEnumDisplayName(res.RoleCommission)
+            });
+
+            return result;
         }
+
 
 
     }

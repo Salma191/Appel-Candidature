@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using pfe_back.Controllers;
 using pfe_back.Services;
+using pfe_back.DTOs;
+using System.Configuration;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +20,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<CommissionService>(); // Ajout du service dans DI
 builder.Services.AddScoped<DecisionService>(); // Ajout du service dans DI
 
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.AddTransient<IMailService, MailService>();
 
 // Connexion � la base de donn�es SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

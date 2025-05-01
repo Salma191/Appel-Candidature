@@ -12,11 +12,18 @@ namespace pfe_back.Models
         public string? Critere { get; set; }
         public int TypePosteId { get; set; }
         public TypePoste? TypePoste { get; set; }
+        public int EntiteId { get; set; }
+        public Entite? Entite { get; set; }
+        [JsonIgnore]
         public ICollection<Candidature>? Candidatures { get; set; }
         [JsonIgnore]
         public ICollection<PV>? PVs { get; set; }
         [JsonIgnore]
         public ICollection<Decision>? Decisions { get; set; }
+
+        public int? OrganigrammeId { get; set; }
+        public Organigramme? Organigramme { get; set; }
+
 
     }
 }

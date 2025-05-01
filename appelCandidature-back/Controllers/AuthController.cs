@@ -10,6 +10,8 @@ using System.Security.Claims;
 using BCrypt.Net;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using pfe_back.Services;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace pfe_back.Controllers
 {
@@ -19,11 +21,14 @@ namespace pfe_back.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IMailService mailService;
 
-        public AuthController(ApplicationDbContext context, IConfiguration configuration)
+
+        public AuthController(ApplicationDbContext context, IConfiguration configuration, IMailService mailService)
         {
             _context = context;
             _configuration = configuration;
+            this.mailService = mailService;
         }
 
         // POST : api/auth/register
@@ -51,35 +56,107 @@ namespace pfe_back.Controllers
             };
 
             _context.Utilisateurs.Add(utilisateur);
-            await _context.SaveChangesAsync(); // Sauvegarde pour générer l'ID
+            await _context.SaveChangesAsync();
 
-            // Création du candidat lié à l'utilisateur
+
+            var randomAffectation = await _context.Entites
+                    .OrderBy(o => Guid.NewGuid())
+                    .Select(o => o.Nom)
+                    .FirstOrDefaultAsync();
+
+            var randomPoste = await _context.Poste
+                .OrderBy(o => Guid.NewGuid())
+                .Select(o => o.Description)
+                .FirstOrDefaultAsync();
+
+
+
             var candidat = new Candidat
             {
-                AffectationActuelle = string.Empty,  // Ou valeurs par défaut
-                DateRetraite = DateTime.Now.AddYears(5),  // Valeur par défaut
-                JoursAbsence = 0,  // Valeur par défaut
-                Sanction = string.Empty,  // Valeur par défaut
-                NoteTroisDernieresAnnees = string.Empty,  // Valeur par défaut
-                Catégorie = string.Empty,  // Valeur par défaut
-                Congé = string.Empty,  // Valeur par défaut
-                PosteOccupe = string.Empty,  // Valeur par défaut
-                Consentement = false,  // Valeur par défaut
-                UtilisateurId = utilisateur.Id,  // Lier le candidat à l'utilisateur
-                Utilisateur = utilisateur
+                AffectationActuelle = randomAffectation ?? "Affectation Test",
+                DateRetraite = DateTime.Now.AddYears(5 + new Random().Next(0, 5)),
+                JoursAbsence = new Random().Next(0, 10),
+                Sanction = "Aucune",
+                NoteTroisDernieresAnnees = "Non disponible",
+                Catégorie = string.Empty,
+                Congé = "Non",
+                PosteOccupe = randomPoste ?? "Poste Test",
+                Consentement = false,
+                UtilisateurId = utilisateur.Id,
+                Utilisateur = utilisateur,
+                EmailVerificationToken = Guid.NewGuid().ToString(),
+                TokenGeneratedAt = DateTime.UtcNow
             };
 
-            // Ajouter le candidat à la base de données
-            _context.Candidats.Add(candidat);
-            await _context.SaveChangesAsync(); // Sauvegarde pour générer l'ID du candidat
 
-            return Ok("Utilisateur et candidat enregistrés avec succès !");
+            _context.Candidats.Add(candidat);
+            await _context.SaveChangesAsync();
+
+            var verificationUrl = $"{_configuration["Jwt:Audience"]}/verify-email?token={candidat.EmailVerificationToken}";
+            var request = new WelcomeRequest
+            {
+                ToEmail = utilisateur.Email,
+                UserName = utilisateur.Nom,
+                VerificationUrl = verificationUrl
+            };
+
+            await mailService.SendWelcomeEmailAsync(request);
+
+        
+            return Ok(new { Message = "Inscription réussie. Veuillez vérifier votre email.", Token = candidat.EmailVerificationToken });
         }
 
 
+        [HttpGet("verify-email")]
+        public async Task<IActionResult> VerifyEmail(string token)
+        {
+            var candidat = await _context.Candidats.FirstOrDefaultAsync(c => c.EmailVerificationToken == token);
+
+            if (candidat == null || candidat.Statut == true)
+                return BadRequest("Token invalide ou déjà utilisé.");
+
+            candidat.Statut = true;
+            candidat.EmailVerificationToken = null;
+            await _context.SaveChangesAsync();
+
+            return Ok("Email vérifié avec succès.");
+        }
 
 
-        [AllowAnonymous]
+        [HttpPost("recheck/{id}")]
+        public async Task<IActionResult> SendWelcomeMail(int id)
+        {
+            try
+            {
+                var candidat = await _context.Candidats
+                    .Include(c => c.Utilisateur)
+                    .FirstOrDefaultAsync(c => c.Id == id);
+
+                if (candidat == null || candidat.Utilisateur == null)
+                {
+                    return NotFound(new { Message = "Candidat ou utilisateur introuvable." });
+                }
+
+                candidat.EmailVerificationToken = Guid.NewGuid().ToString();
+                await _context.SaveChangesAsync();
+
+                var verificationUrl = $"{_configuration["Jwt:Audience"]}/verify-email?token={candidat.EmailVerificationToken}";
+                var request = new WelcomeRequest
+                {
+                    ToEmail = candidat.Utilisateur.Email,
+                    UserName = candidat.Utilisateur.Nom,
+                    VerificationUrl = verificationUrl
+                };
+
+                await mailService.SendWelcomeEmailAsync(request);
+                return Ok(request);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Une erreur est survenue.", Details = ex.Message });
+            }
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
@@ -91,6 +168,7 @@ namespace pfe_back.Controllers
 
             var utilisateur = await _context.Utilisateurs
                 .Include(u => u.Role)
+                .Include(u => u.Candidat)
                 .FirstOrDefaultAsync(u => u.Email == model.Email);
 
             if (utilisateur == null || !BCrypt.Net.BCrypt.Verify(model.Password, utilisateur.Password))
@@ -99,22 +177,33 @@ namespace pfe_back.Controllers
                 return Unauthorized(new { Message = "Email ou mot de passe incorrect." });
             }
 
+            if (utilisateur.Candidat != null && utilisateur.Candidat.Statut == false)
+            {
+                return Unauthorized(new { Message = "Veuillez vérifier votre adresse email avant de vous connecter." });
+            }
+
             var token = GenerateJwtToken(utilisateur);
             Console.WriteLine($"Token généré: {token}");
 
-            return Ok(new { Token = token });
+            return Ok(new { Token = token, utilisateur.Prenom, utilisateur.Role?.Nom, utilisateur.Id });
         }
 
 
         // Méthode pour générer le token JWT
         private string GenerateJwtToken(Utilisateur utilisateur)
         {
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, utilisateur.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, utilisateur.Email),
-                new Claim(ClaimTypes.Role, utilisateur.Role.Nom)
+                new Claim(ClaimTypes.Role, utilisateur.Role.Nom),
+
             };
+
+            if (utilisateur.Role.Nom == "Candidat" && utilisateur.Candidat != null)
+            {
+                claims.Add(new Claim("candidatId", utilisateur.Candidat.Id.ToString()));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

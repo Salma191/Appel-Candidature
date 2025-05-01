@@ -1,0 +1,423 @@
+<app-sidebar></app-sidebar>
+<app-table>
+<div class="p-6 bg-white rounded-lg shadow-lg">
+  <button (click)="goBack()" class="text-gray-600 hover:underline mb-4">
+    &larr; Retour aux décisions
+  </button>
+
+  <h5 class="mb-2 text-dark me-4 fs-4">
+    <i class="fa fa-dot-circle text-dark me-2"></i>
+    <span>Détail des décisions à Traiter</span>
+</h5>
+
+  <!-- Poste Detail -->
+  <div *ngIf="posteDetail" class="mb-6 border border-gray-100 p-4 rounded bg-white shadow-sm">
+    <!-- En-tête de la décision -->
+    <h2 class="text-xl font-bold mb-2">{{ posteDetail.intitule }}</h2>
+    <p class="mb-1"><strong>Référence de la décision :</strong> {{ decision?.reference }}</p>
+    <p class="mb-1"><strong>Titre de la fonction :</strong> {{ posteDetail.intitule }}</p>
+    <div class="flex space-x-6 mt-4">
+      <p><strong>Traitement dossier :</strong>
+        <span class="text-blue-600">{{ traitementDossierCount }}</span> /
+        <span class="text-green-600">{{ totalCandidates }}</span>
+      </p>
+      <p><strong>Traitement de conformité :</strong>
+        <span class="text-blue-600">{{ traitementConformiteCount }}</span> /
+        <span class="text-green-600">{{ totalCandidates }}</span>
+      </p>
+    </div>
+  
+    <hr class="my-4" />
+  
+    <!-- Critères du poste -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div>
+        <h6 class="font-medium">Type de poste</h6>
+        <p>{{ posteDetail.typePoste.nom || 'Aucun type de poste' }}</p>
+      </div>
+      <div>
+        <h6 class="font-medium">Classement</h6>
+        <p>{{ posteDetail.typePoste.classementMinimum }}</p>
+      </div>
+      <div>
+        <h6 class="font-medium">Expérience (ans)</h6>
+        <p>{{ posteDetail.typePoste.nbrExperienceMinimum }}</p>
+      </div>
+      <div>
+        <h6 class="font-medium">Moy. Notes (ans)</h6>
+        <p>{{ posteDetail.typePoste.noteMinimum }}</p>
+      </div>
+    </div>
+  </div>
+  
+
+  <!-- Filtres… -->
+  <div class="flex flex-wrap items-center gap-4 mb-6">
+    <!-- votre bloc de filtres existant -->
+  </div>
+
+  <!-- Tableau des candidatures -->
+  <div class="overflow-auto rounded-lg border border-gray-200 shadow-md">
+    <table class="w-full table-auto text-left text-sm text-gray-700">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-3">Classement</th>
+          <th class="px-4 py-3">N° Enreg.</th>
+          <th class="px-4 py-3">Nom Prénom</th>
+          <th class="px-4 py-3">Note</th>
+          <th class="px-4 py-3">Expérience</th>
+          <th class="px-4 py-3">Statut dossier</th>
+          <th class="px-4 py-3">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <tr *ngFor="let c of filtered"  
+            class="hover:bg-gray-100">
+          <td class="px-4 py-2">{{ c.ranking }}</td>
+          <td class="px-4 py-2">{{ c.numero }}</td>
+          <td class="px-4 py-2">{{ c.nomPrenom }}</td>
+          <td class="px-4 py-2">{{ c.note }}</td>
+          <td class="px-4 py-2">{{ c.nbrExperience }}</td>
+          <td class="px-4 py-2 font-medium">{{ c.statutDossier }}</td>
+          <td class="px-4 py-2 flex gap-2">
+            <button
+              (click)="onValidate(c)"
+              class="px-3 py-1 bg-green-600 text-white rounded-md text-sm"
+            >
+              Valider
+            </button>
+            <button
+              (click)="onView(c)"
+              class="px-3 py-1 bg-blue-600 text-white rounded-md text-sm"
+            >
+              Voir
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="overflow-auto rounded-lg border border-gray-200 shadow-md">
+    <table class="w-full table-auto text-left text-sm text-gray-700">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-3">Statut</th>
+          <th class="px-4 py-3">Action</th>
+          <th class="px-4 py-3">Outils</th>
+          <th class="px-4 py-3">Analyse Conformité</th>
+          <th class="px-4 py-3">Num Dossier</th>
+          <!-- <th class="px-4 py-3">Matricule</th> -->
+          <th class="px-4 py-3">Prénom NOM</th>
+          <!-- <th class="px-4 py-3">Date Emb.</th> -->
+          <th class="px-4 py-3">Exp prof (ans)</th>
+          <th class="px-4 py-3">Date départ retraite</th>
+          <th class="px-4 py-3">Fonction actuelle</th>
+          <th class="px-4 py-3">Jrs_Abs [2 ans]</th>
+          <th class="px-4 py-3">Date dépôt</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <tr *ngFor="let c of filtered" class="hover:bg-gray-100">
+  
+          <!-- Statut calculé -->
+          <td class="px-4 py-2">
+            <ng-container [ngSwitch]="c.statutDossier">
+              <span *ngSwitchCase="'Complet'" class="text-green-600 font-medium">Complet</span>
+              <span *ngSwitchCase="'Incomplet'" class="text-red-600 font-medium">Incomplet</span>
+              <span *ngSwitchDefault class="text-gray-600 font-medium">{{ c.statutDossier }}</span>
+            </ng-container>
+          </td>
+  
+          <!-- Action buttons -->
+          <td class="px-4 py-2 flex space-x-2">
+            <button
+              *ngIf="c.statutDossier==='En attente'"
+              (click)="onValidate(c)"
+              class="px-3 py-1 bg-green-600 text-white rounded-md text-sm"
+            >Valider</button>
+            <button
+              *ngIf="c.statutDossier==='En attente'"
+              (click)="onDeny(c)"
+              class="px-3 py-1 bg-red-600 text-white rounded-md text-sm"
+            >Deny</button>
+            <button
+              *ngIf="c.statutDossier!=='En attente'"
+              (click)="onReactivate(c)"
+              class="px-3 py-1 bg-yellow-600 text-white rounded-md text-sm"
+            >Reactivate</button>
+          </td>
+  
+          <!-- Outils : simple menu trigger -->
+          <td class="px-4 py-2">
+            <button (click)="onView(c)" class="px-2 py-1 bg-blue-600 text-white rounded-md text-xs">Outils…</button>
+          </td>
+  
+          <!-- Analyse Conformité badge -->
+          <td class="px-4 py-2">
+            <span
+              [ngClass]="{
+                'bg-green-100 text-green-800': c.conforme===2,
+                'bg-red-100 text-red-800':     c.conforme===1
+              }"
+              class="px-2 py-1 rounded-full text-xs font-medium"
+            >
+              {{ c.conforme===2 ? 'Conforme' : 'Non-conforme' }}
+            </span>
+          </td>
+  
+          <!-- Num Dossier -->
+          <td class="px-4 py-2">{{ c.numero }}</td>
+    
+          <!-- Prénom NOM -->
+          <td class="px-4 py-2">{{ c.nomPrenom }}</td>
+  
+          <!-- Date Emb. -->
+          <!-- <td class="px-4 py-2">{{ c.DateEmbauche || '–' }}</td> -->
+  
+          <!-- Exp prof (ans) -->
+          <td class="px-4 py-2">{{ c.nbrExperience }}</td>
+  
+          <!-- Date départ retraite -->
+          <td class="px-4 py-2">{{ c.DateRetraite || '–' }}</td>
+  
+          <!-- Fonction actuelle -->
+          <td class="px-4 py-2">{{ c.origin || '–' }}</td>
+  
+          <!-- Jrs_Abs [2 ans] -->
+          <td class="px-4 py-2">{{ c.JoursAbsence }}</td>
+  
+          <!-- Date dépôt -->
+          <td class="px-4 py-2">{{ c.appliedDate }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+</div>
+
+<!-- Modal de détails candidat -->
+<!-- Modal Overlay -->
+<!-- À mettre dans traitement.component.html, à la place de ton ancien modal -->
+<!-- Overlay transparent + flou -->
+<!-- Overlay transparent + flou -->
+<div
+  *ngIf="isModalOpen && selectedModalCandidate"
+  class="fixed inset-0 bg-white/10 backdrop-blur-md flex items-center justify-center z-50"
+>
+  <!-- Container -->
+  <div class="bg-white rounded-xl shadow-xl w-11/12 max-w-3xl overflow-auto max-h-[90vh]">
+
+    <!-- 1. HEADER AVATAR + NAME + BADGES -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <!-- gauche : avatar + nom + dropdown -->
+      <div class="flex items-center space-x-3">
+        <img
+          *ngIf="selectedModalCandidate.avatarUrl"
+          [src]="selectedModalCandidate.avatarUrl"
+          alt="avatar"
+          class="w-12 h-12 rounded-full object-cover"
+        />
+        <div class="flex items-center space-x-1">
+          <h2 class="text-xl font-semibold">
+            {{ selectedModalCandidate.nomPrenom }}
+          </h2>
+          <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+                  d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.06 0L5.25 8.27a.75.75 0 01-.02-1.06z"
+                  clip-rule="evenodd" />
+          </svg>
+        </div>
+      </div>
+      <!-- droite : badges score + status -->
+      <!-- <div class="flex items-center space-x-2">
+        <span
+          class="inline-flex items-center bg-yellow-100 text-yellow-800 text-sm font-medium px-3 py-1 rounded-full"
+        >
+          {{ selectedModalCandidate.note }} Overall
+        </span>
+        <span
+          class="inline-flex items-center bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full"
+        >
+          {{ selectedModalCandidate.statutDossier === 'Complet' ? 'Active' : 'Inactive' }}
+        </span>
+      </div> -->
+      <div class="flex items-center space-x-2">
+        <button  (click)="closeModal()">x</button>
+      </div>
+    </div>
+
+    <!-- 2. SUB-HEADER : infos summary -->
+    <div class="px-6 py-2 text-sm text-gray-600 grid grid-cols-1 sm:grid-cols-3 gap-4 border-b border-gray-100">
+      <div>
+        <span class="font-medium">Origin:</span>
+        {{ selectedModalCandidate.origin || '–' }}
+      </div>
+      <div>
+        <span class="font-medium">Applied at:</span>
+        {{ selectedModalCandidate.appliedDate || '–' }}
+      </div>
+      <div>
+        <span class="font-medium">Job Applied:</span>
+        {{ posteDetail?.intitule || '–' }}
+      </div>
+    </div>
+
+    <!-- 3. TABS NAVIGATION -->
+    <nav class="flex space-x-4 px-6 overflow-x-auto border-b border-gray-100 text-sm">
+      <button
+        (click)="activeTab = 'application'"
+        [ngClass]="{
+          'border-b-2 border-blue-600 text-blue-600': activeTab==='application',
+          'text-gray-500 hover:text-gray-700': activeTab!=='application'
+        }"
+        class="py-3"
+      >
+        Job Application
+      </button>
+      <button
+      (click)="onResumeTab()"
+        [ngClass]="{
+          'border-b-2 border-blue-600 text-blue-600': activeTab==='resume',
+          'text-gray-500 hover:text-gray-700': activeTab!=='resume'
+        }"
+        class="py-3"
+      >
+        Resume
+      </button>
+      <button
+        (click)="activeTab = 'form'"
+        [ngClass]="{
+          'border-b-2 border-blue-600 text-blue-600': activeTab==='form',
+          'text-gray-500 hover:text-gray-700': activeTab!=='form'
+        }"
+        class="py-3"
+      >
+        Form Submission
+      </button>
+      <button
+        (click)="activeTab = 'interview'"
+        [ngClass]="{
+          'border-b-2 border-blue-600 text-blue-600': activeTab==='interview',
+          'text-gray-500 hover:text-gray-700': activeTab!=='interview'
+        }"
+        class="py-3"
+      >
+        Interview
+      </button>
+    </nav>
+
+    <!-- 4. TAB CONTENT -->
+    <div class="px-6 py-6 space-y-8">
+      <!-- * JOB APPLICATION TAB * -->
+      <ng-container *ngIf="activeTab==='application'">
+        <!-- Section A : Informations générales -->
+        <section>
+          <h3 class="text-lg font-semibold mb-2">Informations générales</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700">
+            <div><strong>N° Enreg. :</strong> {{ selectedModalCandidate.numero }}</div>
+            <div><strong>Note :</strong> {{ selectedModalCandidate.note }}/20</div>
+            <div><strong>Expérience :</strong> {{ selectedModalCandidate.nbrExperience }} ans</div>
+            <div><strong>Classement :</strong> {{ selectedModalCandidate.ranking }}</div>
+          </div>
+        </section>
+
+        <!-- Section B : Documents -->
+        <section>
+          <h3 class="text-lg font-semibold mb-2">Documents</h3>
+          <ul class="divide-y divide-gray-200">
+            <li
+              *ngFor="let doc of selectedModalCandidate.documents"
+              class="flex justify-between items-center py-2 text-sm"
+            >
+              {{ doc.nom }} ({{ doc.typeDoc }})
+              <button
+                (click)="previewDocument(doc.id)"
+                class="text-blue-600 hover:underline"
+              >
+                View
+              </button>
+            </li>
+            <li *ngIf="!selectedModalCandidate.documents.length" class="py-2 italic text-gray-500">
+              Aucun document disponible.
+            </li>
+          </ul>
+        </section>
+
+        <!-- Section C : Diplômes -->
+        <section>
+          <h3 class="text-lg font-semibold mb-2">Diplômes</h3>
+          <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+            <li *ngFor="let d of selectedModalCandidate.diplomas">
+              {{ d.intitule }} — {{ d.etablissement }} ({{ d.annee }})
+            </li>
+            <li *ngIf="!selectedModalCandidate.diplomas?.length" class="italic text-gray-500">
+              Aucun diplôme renseigné.
+            </li>
+          </ul>
+        </section>
+
+        <!-- Section D : Expériences -->
+        <section>
+          <h3 class="text-lg font-semibold mb-2">Expériences</h3>
+          <div class="space-y-4">
+            <div
+              *ngFor="let exp of selectedModalCandidate.experiences"
+              class="bg-gray-50 p-4 rounded-lg text-sm text-gray-700"
+            >
+              <p class="font-medium">{{ exp.poste }} – {{ exp.societe }}</p>
+              <p class="text-gray-500 text-xs">{{ exp.dateDebut }} ⟶ {{ exp.dateFin }}</p>
+              <p class="text-gray-500 text-xs">{{ exp.taches }}</p>
+              <!-- <ul class="list-disc list-inside mt-2 space-y-1">
+                <li *ngFor="let t of exp.taches">{{ t }}</li>
+              </ul> -->
+            </div>
+            <p *ngIf="!selectedModalCandidate.experiences?.length" class="italic text-gray-500">
+              Aucune expérience renseignée.
+            </p>
+          </div>
+        </section>
+
+        <!-- Section E: Commentaire & Validation -->
+  <section class="pt-4 border-t border-gray-100">
+    <h3 class="text-lg font-semibold mb-2">🖊 Commentaire et Validation</h3>
+    <textarea
+      [(ngModel)]="selectedModalCandidate.commentaires"
+      name="commentaires"
+      rows="3"
+      class="w-full border-gray-300 rounded-lg p-2 mb-3"
+      placeholder="Votre commentaire…"
+    ></textarea>
+    <button
+      (click)="submitForm()"
+      class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+    >
+      Valider & Envoyer
+    </button>
+  </section>
+      </ng-container>
+
+      <!-- * RESUME TAB, FORM TAB, INTERVIEW TAB… Tu peux dupliquer la structure ci-dessus selon tes besoins * -->
+<!-- inside your <nav>…</nav> / <div class="px-6 py-6">… -->
+  <ng-container *ngIf="activeTab === 'resume'">
+    <div *ngIf="pdfUrl; else noCv" class="mt-6">
+      <iframe
+        [src]="pdfUrl | safeUrl"
+        width="100%"
+        height="600px"
+        class="border rounded-lg"
+        style="display:block;"
+      ></iframe>
+    </div>
+
+    <ng-template #noCv>
+      <p class="text-sm italic text-gray-500">Aucun CV disponible.</p>
+    </ng-template>
+  </ng-container>
+  
+    </div>
+  </div>
+</div>
+
+
+</app-table>

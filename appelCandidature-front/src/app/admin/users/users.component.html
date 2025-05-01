@@ -1,0 +1,70 @@
+<app-sidebar></app-sidebar>
+
+<app-table [breadcrumb]="breadcrumb" [bread]="true" [add]="true" (addClicked)="openModal()">
+  <div class="overflow-hidden rounded-lg border border-gray-200 shadow-md">
+    <table class="w-full border-collapse bg-white text-left text-sm text-gray-500">
+      <thead class="bg-gray-50">
+        <tr>
+          <th *ngFor="let column of columns" class="px-6 py-4 font-medium text-gray-900">
+            {{ column.label }}
+          </th>
+          <th class="px-6 py-4 font-medium text-gray-900">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 border-t border-gray-100">
+        <tr *ngFor="let item of users" class="hover:bg-gray-50">
+          <!-- data columns -->
+          <td *ngFor="let column of columns" class="px-6 py-4">
+            <ng-container [ngSwitch]="column.key">
+          
+              <!-- role with four distinct colours -->
+              <span *ngSwitchCase="'role'"
+                    class="rounded-full px-3 py-1 text-xs font-semibold"
+                    [ngClass]="{
+                      'bg-red-100 text-red-700': item.role === 'Administrateur',
+                      'bg-blue-100 text-blue-700': item.role === 'DAO',
+                      'bg-green-100 text-green-700': item.role === 'Candidat',
+                      'bg-yellow-100 text-yellow-700': item.role === 'MembreCommission'
+                    }">
+                {{ item.role }}
+              </span>
+          
+              <!-- default for all other columns -->
+              <span *ngSwitchDefault>
+                {{ item[column.key] }}
+              </span>
+          
+            </ng-container>
+          </td>
+          
+          <!-- actions column: always render the <td>, but only show buttons if there are any -->
+          <td class="px-6 py-4">
+            <div class="flex" *ngIf="getActions(item).length; else noActions">
+              <button
+                *ngFor="let action of getActions(item)"
+                class="font-medium rounded-lg text-sm px-2 py-2"
+                (click)="onActionClicked({ action: action.name, item: item })"
+                [title]="action.name"
+              >
+                <i [class]="action.icon" class="w-5 h-5" [ngStyle]="{ color: action.color }"></i>
+              </button>
+            </div>
+            <ng-template #noActions>
+              <!-- optionally show a placeholder when there are no actions -->
+              <span class="text-gray-400 text-xs">—</span>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <app-user-add
+    *ngIf="isModalOpen"
+    [isOpen]="isModalOpen"
+    modal
+    title="Créer un utilisateur"
+    (closed)="closeModalUser()"
+    (confirmed)="onUserCreated()">
+  </app-user-add>
+</app-table>
+

@@ -14,8 +14,6 @@ namespace pfe_back.Models
     {
         [Display(Name = "Décision en Draft")]
         Draft,
-        [Display(Name = "Décision lancées")]
-        Lancement,
         [Display(Name = "Vérification des candidatures")]
         Preselection,
         [Display(Name = "Entretiens")]

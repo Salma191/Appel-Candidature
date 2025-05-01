@@ -19,6 +19,8 @@ namespace pfe_back.Models
         public PV? PV { get; set; }
         public ICollection<Poste>? Postes { get; set; }
         [JsonIgnore]
+        public ICollection<Candidature>? Candidatures { get; set; }
+        [JsonIgnore]
         public ICollection<DecisionPhase> DecisionPhases { get; set; } = new List<DecisionPhase>();
 
     }

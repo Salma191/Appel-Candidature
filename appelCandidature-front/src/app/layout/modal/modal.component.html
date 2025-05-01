@@ -1,0 +1,54 @@
+<div *ngIf="show" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl shadow-2xl w-[90%] max-w-md p-6 animate-fade-in-up relative">
+      
+      <!-- Icône selon le type -->
+      <div class="flex items-center gap-3 mb-4">
+        <div [ngClass]="{
+          'bg-green-100 text-green-600': type === 'success',
+          'bg-red-100 text-red-600': type === 'error',
+          'bg-blue-100 text-blue-600': type === 'info'
+        }" class="rounded-full p-2">
+          <svg *ngIf="type === 'success'" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 13l4 4L19 7"/>
+          </svg>
+          <svg *ngIf="type === 'error'" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+          <svg *ngIf="type === 'info'" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M12 20c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z"/>
+          </svg>
+        </div>
+        <h2 class="text-xl font-semibold" [ngClass]="{
+          'text-green-700': type === 'success',
+          'text-red-700': type === 'error',
+          'text-blue-700': type === 'info'
+        }">
+          {{ title }}
+        </h2>
+      </div>
+  
+      <!-- Message -->
+      <p class="text-gray-700 text-sm leading-relaxed mb-6">{{ message }}</p>
+  
+      <!-- Bouton Fermer -->
+      <div class="text-right">
+        <button
+          class="px-4 py-2 rounded-lg font-medium transition-colors duration-200"
+          [ngClass]="{
+            'bg-green-600 hover:bg-green-700 text-white': type === 'success',
+            'bg-red-600 hover:bg-red-700 text-white': type === 'error',
+            'bg-blue-600 hover:bg-blue-700 text-white': type === 'info'
+          }"
+          (click)="close()">
+          Fermer
+        </button>
+      </div>
+    </div>
+  </div>
+  

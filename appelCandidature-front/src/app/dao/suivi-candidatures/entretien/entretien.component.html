@@ -1,0 +1,155 @@
+<div class="rounded-lg border border-gray-200 shadow-md">
+    <table class="w-full border-collapse bg-white text-left text-sm text-gray-500">
+      <thead class="bg-gray-50">
+        <tr>
+          <th *ngFor="let column of columns" class="px-6 py-4 font-medium text-gray-900">
+            {{ column.label }}
+          </th>
+          <th class="px-6 py-4 font-medium text-gray-900">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 border-t border-gray-100">
+        <ng-container *ngFor="let item of data; let rowIndex = index">
+        <tr>
+          <td *ngFor="let column of columns" class="px-6 py-4">
+            <ng-container [ngSwitch]="column.key">
+              <span *ngSwitchCase="'postes'" class="inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold">
+                <button (click)="toggleDropdown({rowIndex, item})">
+                  <i class="fas fa-chevron-right transition-transform" [ngClass]="{'rotate-90': item['isOpen']}"></i>
+                </button>
+              </span>
+              <span *ngSwitchCase="'statut'" class="inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold"
+                [ngClass]="{
+                  'bg-orange-100 text-orange-500': item['statut'] === 'Draft',
+                  'bg-green-50 text-green-500': item['statut'] === 'Signée',
+                  'bg-blue-50 text-blue-500': item['statut'] === 'Lancée'
+                }">
+                <svg *ngIf="item['statut'] === 'Lancé'" xmlns="http://www.w3.org/2000/svg"
+                  class="fill-current mr-1.5 text-blue-500" viewBox="0 0 16 16" width="16" height="16">
+                  <path d="M11.28 6.78a.75.75 0 00-1.06-1.06L7.25 8.69 5.78 7.22a.75.75 0 00-1.06 1.06l2 2a.75.75 0 001.06 0l3.5-3.5z"></path>
+                  <path fill-rule="evenodd" d="M16 8A8 8 0 110 8a8 8 0 0116 0zm-1.5 0a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"></path>
+                </svg>
+  
+                <svg *ngIf="item['statut'] === 'Draft'" xmlns="http://www.w3.org/2000/svg"
+                  class="fill-current mr-1.5 text-orange-500" viewBox="0 0 16 16" width="16" height="16">
+                  <path fill-rule="evenodd"
+                    d="M6.749.097a8.054 8.054 0 012.502 0 .75.75 0 11-.233 1.482 6.554 6.554 0 00-2.036 0A.75.75 0 016.749.097zM4.345 1.693A.75.75 0 014.18 2.74a6.542 6.542 0 00-1.44 1.44.75.75 0 01-1.212-.883 8.042 8.042 0 011.769-1.77.75.75 0 011.048.166zm7.31 0a.75.75 0 011.048-.165 8.04 8.04 0 011.77 1.769.75.75 0 11-1.214.883 6.542 6.542 0 00-1.439-1.44.75.75 0 01-.165-1.047zM.955 6.125a.75.75 0 01.624.857 6.554 6.554 0 000 2.036.75.75 0 01-1.482.233 8.054 8.054 0 010-2.502.75.75 0 01.858-.624zm14.09 0a.75.75 0 01.858.624 8.057 8.057 0 010 2.502.75.75 0 01-1.482-.233 6.55 6.55 0 000-2.036.75.75 0 01.624-.857zm-13.352 5.53a.75.75 0 011.048.165 6.542 6.542 0 001.439 1.44.75.75 0 01-.883 1.212 8.04 8.04 0 01-1.77-1.769.75.75 0 01.166-1.048zm12.614 0a.75.75 0 01.165 1.048 8.038 8.038 0 01-1.769 1.77.75.75 0 11-.883-1.214 6.543 6.543 0 001.44-1.439.75.75 0 011.047-.165zm-8.182 3.39a.75.75 0 01.857-.624 6.55 6.55 0 002.036 0 .75.75 0 01.233 1.482 8.057 8.057 0 01-2.502 0 .75.75 0 01-.624-.858z">
+                  </path>
+                </svg>
+  
+                <svg *ngIf="item['statut'] === 'Signée'" xmlns="http://www.w3.org/2000/svg"
+                  class="fill-current mr-1.5 text-green-500" viewBox="0 0 16 16" width="16" height="16">
+                  <path d="M8 9.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path>
+                  <path fill-rule="evenodd" d="M8 0a8 8 0 100 16A8 8 0 008 0zM1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0z"></path>
+                </svg>
+  
+                {{ item['statut'] }}
+              </span>
+  
+              <div *ngSwitchCase="'signees'" class="relative inline-block text-left">
+                <button [ngClass]="{ 'open': isComiteOpen[rowIndex]?.[column.key] }"
+                  (click)="toggleMenu(rowIndex, column.key)" *ngIf="item['signees'] && item['signees'].length > 0" type="button"
+                  class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50"
+                  aria-haspopup="true">
+                  PV Signées
+                  <svg class="-mr-1 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                      d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </button>
+  
+                <div class="py-1" role="menu" *ngIf="isComiteOpen[rowIndex]?.[column.key]">
+                  <ng-container *ngIf="item['signees'] && item['signees'].length > 0">
+                    <a class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1">{{ item['signees'] }}</a>
+                  </ng-container>
+                </div>
+                <p *ngIf="!item['signees'] || item['signees'].length === 0" class="block px-4 py-2 text-sm text-gray-500">
+                  PV pas encore signé
+                </p>
+              </div>
+              <div *ngSwitchCase="'supp'" class="relative inline-block text-left">
+                <button [ngClass]="{ 'open': isComiteOpen[rowIndex]?.[column.key] }"
+                  (click)="toggleMenu(rowIndex, column.key)" *ngIf="item['supp'] && item['supp'].length > 0" type="button"
+                  class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50"
+                  aria-haspopup="true">
+                  PJ Supp
+                  <svg class="-mr-1 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                      d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </button>
+  
+                <div class="py-1" role="menu" *ngIf="isComiteOpen[rowIndex]?.[column.key]">
+                  <ng-container *ngIf="item['supp'] && item['supp'].length > 0">
+                    <a class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1">{{ item['supp'] }}</a>
+                  </ng-container>
+                </div>
+                <p *ngIf="!item['supp'] || item['supp'].length === 0" class="block px-4 py-2 text-sm text-gray-500">
+                  <i class="fas fa-unlink"></i>
+                  Aucune PJ
+                </p>
+              </div>
+              <span *ngSwitchDefault>
+                {{ item[column.key] }}
+              </span>
+            </ng-container>
+          </td>
+          <td *ngIf="actions.length > 0" class="px-6 py-4">
+            <div class="flex">
+              <button *ngFor="let action of actions" class="font-medium rounded-lg text-sm px-2 py-2"
+                (click)="onActionClicked({ action: action.name, item: item })" [title]="action.name">
+                <i [class]="action.icon" class="w-5 h-5" [ngStyle]="{ color: action.color }"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <!-- Expanded row content -->
+        <tr *ngIf="item['isOpen']">
+          <td [colSpan]="columns.length + 1" class="p-0 bg-blue-50">
+            <div class="px-8 py-4">
+              <table class="w-full border-collapse bg-white text-left text-sm text-gray-500 border border-gray-200 rounded-lg shadow-md">
+                <thead>
+                  <tr>
+                    <th *ngFor="let column of columnsPostes" class="px-6 py-4 font-medium text-gray-900">
+                      {{ column.label }}
+                    </th>
+                    <th class="px-6 py-4 font-medium text-gray-900">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 border-t border-gray-100">
+                  <tr *ngFor="let posteItem of items" class="hover:bg-gray-50">
+                    <td *ngFor="let column of columnsPostes" class="px-6 py-4">
+                      {{ posteItem[column.key] }}
+                    </td>
+                    <td *ngIf="actions.length > 0" class="px-6 py-4">
+                      <div class="flex">
+                        <button 
+                        *ngFor="let action of actions" 
+                        class="font-medium rounded-lg text-sm px-2 py-2 transition-colors border"
+                        [ngStyle]="{
+                          color: hoverStates[action.name] ? 'white' : action.color,
+                          backgroundColor: hoverStates[action.name] ? action.color : 'transparent'
+                        }"
+                        
+                        [title]="action.name"
+                        (click)="onActionClicked({ action: action.name, item: item })"
+                        (mouseenter)="hoverStates[action.name] = true"
+                        (mouseleave)="hoverStates[action.name] = false">
+                        <i [class]="action.icon" class="w-5 h-5"></i>
+                        Planifier l'entretien
+                      </button>
+                      
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+      </tbody>
+    </table>
+  </div>

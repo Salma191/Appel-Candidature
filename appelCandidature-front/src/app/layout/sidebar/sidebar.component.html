@@ -1,94 +1,184 @@
-<div class="l-navbar" [class.open]="isSidebarOpen" [class.closed]="!isSidebarOpen">
+<div
+  class="l-navbar"
+  [class.open]="isSidebarOpen"
+  [class.closed]="!isSidebarOpen"
+>
   <nav class="nav" [class.flex]="isSidebarOpen" [class.hidden]="!isSidebarOpen">
-          <div class="nav__brand">
-            <i class="fa fa-bars nav__icon" (click)="toggleSidebar()"></i>
-          </div>
-          <div>
-              <a href="#" class="nav__link flex">
-                  <i class="fa fa-th-large nav__icon"></i>
-                  <span class="nav__name">Tableau de bord</span>
-              </a>
-              <a routerLink="/org" class="nav__link flex">
-                  <i class="fa fa-sitemap nav__icon"></i>
-                  <span class="nav__name">Organigramme</span>
-              </a>
-                <div class="nav__link" [class.open]="isProjectsMenuOpen" (click)="toggleMenu('projects')">
-                    <div class="flex">
-                        <i class="fa fa-file-alt nav__icon"></i>
-                        <span class="nav__name">Gestion des PV et Decisions</span>
-                        <ion-icon name="chevron-down-outline" class="collapse__link" [ngClass]="{ 'rotate': isProjectsMenuOpen }"></ion-icon>
-                    </div>
-                    <ul *ngIf="isProjectsMenuOpen">
-                        <li><a routerLink="/pv" class="nav_name">PV de lancement</a></li>
-                        <li><a routerLink="/decision" class="nav_name">Decisions</a></li>
-                    </ul>
-              </div>
-              <a href="#" class="nav__link flex">
-                <i class="fa fa-briefcase nav__icon"></i>
-                  <span class="nav__name">Postes a pourvoir</span>
-              </a>
-              <div class="nav__link" [class.open]="isTeamMenuOpen" (click)="toggleMenu('team')">
-                <div class="flex">
-                <i class="fa fa-tasks nav__icon"></i>
-                <span class="nav__name">Suivi des Candidatures</span>
-                <ion-icon name="chevron-down-outline" class="collapse__link" [ngClass]="{ 'rotate': isTeamMenuOpen }"></ion-icon>
-              </div>
-                <ul *ngIf="isTeamMenuOpen">
-                    <li><a routerLink="/decision-draft" href="#" class="nav_name">Decisions en Draft</a></li>
-                    <li><a href="#" class="nav_name">Decisions lancees</a></li>
-                    <li><a href="#" class="nav_name">Verification des candidatures</a></li>
-                    <li><a href="#" class="nav_name">Entretiens</a></li>
-                    <li><a href="#" class="nav_name">Evaluation</a></li>
-                    <li><a href="#" class="nav_name">Nomination</a></li>
-                </ul>
-            </div>
-              <a href="#" class="nav__link flex">
-                <i class="fa fa-archive nav__icon"></i>
-                  <span class="nav__name">Archivage</span>
-              </a>
-
-              <a href="#" class="nav__link flex">
-                  <i class="fa fa-exclamation-circle nav__icon"></i>
-                  <span class="nav__name">Reclamation</span>
-              </a>
-          </div>
-
-
-      <!-- Lien de déconnexion -->
-      <a href="#" class="nav__link flex nav__dropdown-container">
-          <i class="fa fa-sign-out-alt nav__icon" aria-hidden="true"></i>
-          <span class="nav__name" routerLink="/">Log Out</span>
+    <div class="nav__brand">
+      <i class="fa fa-bars nav__icon" (click)="toggleSidebar()"></i>
+    </div>
+    <div *ngIf="role === 'DAO'">
+      <a routerLink="/dao/dashboard" class="nav__link flex">
+        <i class="fa fa-th-large nav__icon"></i>
+        <span class="nav__name">Tableau de bord</span>
       </a>
+      <a routerLink="/dao/org" class="nav__link flex">
+        <i class="fa fa-sitemap nav__icon"></i>
+        <span class="nav__name">Organigramme</span>
+      </a>
+      <div
+        class="nav__link"
+        [class.open]="isProjectsMenuOpen"
+        (click)="toggleMenu('projects')"
+      >
+        <div class="flex">
+          <i class="fa fa-file-alt nav__icon"></i>
+          <span class="nav__name">Gestion des PV et Decisions</span>
+          <i
+            class="fa fa-chevron-down collapse__link"
+            [ngClass]="{ rotate: isProjectsMenuOpen }"
+          ></i>
+        </div>
+        <ul *ngIf="isProjectsMenuOpen">
+          <li><a routerLink="/dao/pv" class="nav_name">PV de lancement</a></li>
+          <li><a routerLink="/dao/decision" class="nav_name">Decisions</a></li>
+        </ul>
+      </div>
+      <a routerLink="/dao/postes" class="nav__link flex">
+        <i class="fa fa-briefcase nav__icon"></i>
+        <span class="nav__name">Offres ouvertes</span>
+      </a>
+
+      <a routerLink="/dao/suivi-candidatures" class="nav__link flex">
+        <i class="fa fa-tasks nav__icon"></i>
+        <span class="nav__name">Suivi des Candidatures</span>
+      </a>
+
+      <a routerLink="/dao/archive" class="nav__link flex">
+        <i class="fa fa-archive nav__icon"></i>
+        <span class="nav__name">Archivage</span>
+      </a>
+
+      <a routerLink="/dao/reclamation" class="nav__link flex">
+        <i class="fa fa-exclamation-circle nav__icon"></i>
+        <span class="nav__name">Reclamation</span>
+      </a>
+    </div>
+    <div *ngIf="role === 'Candidat'">
+      <a routerLink="/candidat/home" class="nav__link flex">
+        <i class="fas fa-home nav__icon"></i>
+        <span class="nav__name">Accueil</span>
+      </a>
+    
+      <a routerLink="/candidat/postes" class="nav__link flex">
+        <i class="fas fa-bullhorn nav__icon"></i>
+        <span class="nav__name">Postes Disponibles</span>
+      </a>
+    
+      <div
+        class="nav__link"
+        [class.open]="isProjectsMenuOpen"
+        (click)="toggleMenu('projects')"
+      >
+        <div class="flex">
+          <i class="fas fa-folder-open nav__icon"></i>
+          <span class="nav__name">Mes Candidatures</span>
+          <i
+            class="fas fa-chevron-down collapse__link"
+            [ngClass]="{ rotate: isProjectsMenuOpen }"
+          ></i>
+        </div>
+        <ul *ngIf="isProjectsMenuOpen">
+          <li><a routerLink="/candidat/candidature" class="nav_name">Toutes les candidatures</a></li>
+          <li><a routerLink="/candidat/candidature/sauvegarde" class="nav_name">En cours</a></li>
+          <li><a routerLink="/decision" class="nav_name">Soumises</a></li>
+          <li><a routerLink="/candidat/candidature/sauvegarde" class="nav_name">Sauvegardées</a></li>
+        </ul>
+      </div>
+    
+      <a routerLink="/candidat/suivi-candidature" class="nav__link flex">
+        <i class="fas fa-tasks nav__icon"></i>
+        <span class="nav__name">Suivi de Candidature</span>
+      </a>
+    
+      <a routerLink="/candidat/profil" class="nav__link flex">
+        <i class="fas fa-user-circle nav__icon"></i>
+        <span class="nav__name">Mon Profil</span>
+      </a>
+    
+      <!-- Exemples en option :
+      <a routerLink="/archive" class="nav__link flex">
+        <i class="fas fa-archive nav__icon"></i>
+        <span class="nav__name">Archivage</span>
+      </a>
+    -->
+      <a href="#" class="nav__link flex">
+        <i class="fas fa-comment-dots nav__icon"></i>
+        <span class="nav__name">Réclamation</span>
+      </a>
+
+    </div>
+    <div *ngIf="role === 'Administrateur'">
+      <a routerLink="/admin/users" class="nav__link flex">
+        <i class="fas fa-users nav__icon"></i>
+        <span class="nav__name">Utilisateurs</span>
+      </a>
+
+    </div>
+    
+
+    <!-- Lien de déconnexion -->
+    <a (click)="logout()" class="nav__link flex nav__dropdown-container">
+      <i class="fa fa-sign-out-alt nav__icon" aria-hidden="true"></i>
+      <span class="nav__name" routerLink="/">Log Out</span>
+    </a>
   </nav>
 </div>
 
-<div class="main-content" [class.expanded]="isSidebarOpen" [class.collapsed]="!isSidebarOpen">
-  <div class="min-h-full bg-gray-100 py-6">
-      <nav class="shadow-sm rounded-lg bg-white mx-auto max-w-7xl px-4 py-2 sm:px-6 lg:px-8">
-          <div class="flex h-16 items-center justify-between">
-              <div class="flex items-center">
-                  <div class="shrink-0"></div>
-              </div>
-              <div class="md:block">
-                  <div class="ml-4 flex items-center md:ml-6">
-                      <button type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white">
-                          <span class="sr-only">View notifications</span>
-                          <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-                          </svg>
-                      </button>
-
-                      <div class="relative ml-3">
-                          <button type="button" class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm">
-                              <img class="size-8 rounded-full"
-                                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                  alt="">
-                          </button>
-                      </div>
-                  </div>
-              </div>
+<div
+  class="main-content"
+  [class.expanded]="isSidebarOpen"
+  [class.collapsed]="!isSidebarOpen"
+>
+  <div class="min-h-full bg-gray-50 py-6">
+    <nav
+      class="shadow-sm rounded-lg bg-white mx-auto max-w-7xl px-4 py-2 sm:px-6 lg:px-8"
+    >
+      <div class="flex h-16 items-center justify-between">
+        <div class="flex items-center">
+          <div class="shrink-0"><h1 *ngIf="prenom" class="bienvenue">
+            Bonjour, {{ prenom }} !
+          </h1>
+          
           </div>
-      </nav>
+        </div>
+        <div class="md:block">
+          <div class="ml-4 flex items-center md:ml-6">
+            <button
+              type="button"
+              class="relative rounded-full border p-1 text-gray-400 hover:text-black focus:outline-none focus:ring-2 focus:ring-black"
+            >
+              <span class="sr-only">View notifications</span>
+              <svg
+                class="size-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+                />
+              </svg>
+            </button>
+
+            <div class="relative ml-3">
+              <button
+                type="button"
+                class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm"
+              >
+                <img
+                  class="size-8 rounded-full"
+                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                  alt=""
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
   </div>
 </div>

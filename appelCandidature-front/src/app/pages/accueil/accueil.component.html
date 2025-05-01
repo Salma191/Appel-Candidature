@@ -1,0 +1,440 @@
+<!-- 1) HEADER + HERO -->
+<header
+  class="relative bg-cover bg-center bg-no-repeat h-[650px] overflow-hidden"
+  style="
+    background-image: url('https://img.freepik.com/free-photo/business-adviser-analyzing-financial-figures-denoting-progress-work-company_1423-97.jpg?t=st=1743871036~exp=1743874636~hmac=f22d9a1acb1ad28224ce0b7eb6d1ac248fd00946ff947951e3a662c4492b0081&w=996');
+  "
+>
+  <!-- Overlay sombre + backdrop blur -->
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+
+  <!-- Navigation -->
+  <!-- <nav class="relative z-20 flex max-w-7xl mx-auto items-center justify-between p-6 lg:px-8">
+        <div class="flex lg:flex-1">
+            <a href="#" class="-m-5 px-5">
+              <span class="sr-only">Onee</span>
+              <img class="h-10 w-auto" src="https://th.bing.com/th/id/R.f306250408c3f74c7fb9fa7c7a58f2a0?rik=IdPIKQ5Ie4vg4Q&pid=ImgRaw&r=0" alt="Logo ONEE">
+            </a>
+          </div>
+      
+          <div class="hidden lg:flex lg:gap-x-12">
+              <a routerLink="/" class="text-sm/6 font-semibold text-white">Accueil</a>
+              <div class="relative">
+                  <button type="button" class="flex items-center gap-x-1 text-sm/6 font-semibold text-white" (click)="toggleMenu('candidatures')">
+                      Candidatures
+                      <svg class="size-5 flex-none text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                      </svg>
+                  </button>
+                  <div *ngIf="menuState.candidatures" class="absolute top-full -left-8 z-10 w-64 max-w-md overflow-hidden rounded-3xl bg-white ring-1 shadow-lg ring-gray-900/5">
+                      <div class="p-3">
+                          <div class="group relative flex items-center gap-x-6 rounded-lg text-sm/6 hover:bg-gray-50">
+                              <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                  <svg class="size-6 text-gray-600 group-hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
+                                  </svg>
+                              </div>
+                              <div class="flex-auto">
+                                  <a href="#" class="block font-semibold text-gray-900">Appel a Candidatures</a>
+                              </div>
+                          </div>
+                          <div class="group relative flex items-center gap-x-6 rounded-lg text-sm/6 hover:bg-gray-50">
+                              <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                  <svg class="size-6 text-gray-600 group-hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
+                                  </svg>
+                              </div>
+                              <div class="flex-auto">
+                                  <a href="#" class="block font-semibold text-gray-900">Mettre a jour les informations</a>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="relative">
+                <button type="button" class="flex items-center gap-x-1 text-sm/6 font-semibold text-white" (click)="toggleMenu('organisation')">
+                    Organisations
+                    <svg class="size-5 flex-none text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+                <div *ngIf="menuState.organisation" class="absolute top-full -left-8 z-10 w-64 max-w-md overflow-hidden rounded-3xl bg-white ring-1 shadow-lg ring-gray-900/5">
+                    <div class="p-3">
+                        <div class="group relative flex items-center gap-x-6 rounded-lg text-sm/6 hover:bg-gray-50">
+                            <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                <svg class="size-6 text-gray-600 group-hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
+                                </svg>
+                            </div>
+                            <div class="flex-auto">
+                                <a routerLink="/org" class="block font-semibold text-gray-900">Structure organisationnelle</a>
+                            </div>
+                        </div>
+                        <div class="group relative flex items-center gap-x-6 rounded-lg text-sm/6 hover:bg-gray-50">
+                            <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                <svg class="size-6 text-gray-600 group-hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
+                                </svg>
+                            </div>
+                            <div class="flex-auto">
+                                <a href="#" class="block font-semibold text-gray-900">Structure organisationnelle liste</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+      
+              <div class="relative">
+                  <button type="button" class="flex items-center gap-x-1 text-xs font-semibold text-gray-900 p-1" (click)="toggleMenu('user')">
+                      <div class="rounded-full bg-white p-1">
+                          <svg width="15px" height="15px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" >
+                              <path d="M8 7C9.65685 7 11 5.65685 11 4C11 2.34315 9.65685 1 8 1C6.34315 1 5 2.34315 5 4C5 5.65685 6.34315 7 8 7Z" fill="#000000"></path>
+                              <path d="M14 12C14 10.3431 12.6569 9 11 9H5C3.34315 9 2 10.3431 2 12V15H14V12Z" fill="#000000"></path>
+                          </svg>
+                      </div>
+                      <svg class="size-5 flex-none text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                      </svg>
+                  </button>
+                  <div *ngIf="menuState.user" class="absolute top-full -left-8 z-10 mt-3 w-64 max-w-md overflow-hidden rounded-3xl bg-white ring-1 shadow-lg ring-gray-900/5">
+                      <div class="p-3">
+                          <div class="group relative flex items-center gap-x-6 rounded-lg text-sm/6 hover:bg-gray-50">
+                              <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                  <svg class="size-6 text-gray-600 group-hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
+                                  </svg>
+                              </div>
+                              <div class="flex-auto">
+                                  <a routerLink="/sign-up" class="block font-semibold text-gray-900">Inscription</a>
+                              </div>
+                          </div>
+                          <div class="group relative flex items-center gap-x-6 rounded-lg text-sm/6 hover:bg-gray-50">
+                            <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                <svg class="size-6 text-gray-600 group-hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
+                                </svg>
+                            </div>
+                            <div class="flex-auto">
+                                <a href="#" class="block font-semibold text-gray-900">Appel a Candidatures</a>
+                            </div>
+                        </div>
+                          <div class="group relative flex items-center gap-x-6 rounded-lg text-sm/6 hover:bg-gray-50">
+                              <div class="flex size-11 flex-none items-center justify-center rounded-lg bg-gray-50 group-hover:bg-white">
+                                  <svg class="size-6 text-gray-600 group-hover:text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59" />
+                                  </svg>
+                              </div>
+                              <div class="flex-auto">
+                                  <a routerLink="/login" class="block font-semibold text-gray-900">Connexion</a>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </nav> -->
+
+        <nav
+        class="sticky top-0 z-50 flex max-w-7xl mx-auto items-center justify-between p-6 lg:px-8 bg-white/10 backdrop-blur-sm transition-colors"
+      >
+        <div class="flex lg:flex-1">
+          <a routerLink="/" class="-m-5 px-5">
+            <span class="sr-only">Onee</span>
+            <img
+              class="h-10 w-auto"
+              src="https://th.bing.com/th/id/R.f306250408c3f74c7fb9fa7c7a58f2a0?rik=IdPIKQ5Ie4vg4Q&pid=ImgRaw&r=0"
+              alt="Logo ONEE"
+            />
+          </a>
+        </div>
+      
+        <div class="hidden lg:flex lg:gap-x-20 text-white">
+          <!-- Accueil -->
+          <a routerLink="/" class="flex items-center gap-x-2 text-sm font-semibold text-white hover:text-indigo-200 transition-colors">
+            <!-- <i class="fas fa-home text-lg"></i> -->
+            Accueil
+          </a>
+
+          <a routerLink="/" class="flex items-center gap-x-2 text-sm font-semibold text-white hover:text-indigo-200 transition-colors">
+            <!-- <i class="fas fa-home text-lg"></i> -->
+            Candidatures
+          </a>
+          
+      
+          <!-- Organisations -->
+          <div class="relative mr-20">
+            <button
+              type="button"
+              class="flex items-center gap-x-2 text-sm font-semibold text-white hover:text-indigo-200 transition-colors"
+              (click)="toggleMenu('organisation')"
+            >
+              <!-- <i class="fas fa-sitemap text-lg"></i> -->
+              Organisations
+              <i class="fas fa-chevron-down text-xs"></i>
+            </button>
+
+            <div
+            *ngIf="menuState.organisation"
+            @fadeInOut
+            class="absolute left-0 mt-2 w-56 bg-white border border-gray-100 rounded-lg shadow-md
+                   ring-1 ring-gray-100 ring-opacity-5 overflow-hidden
+                   transition-opacity duration-200"
+          >
+            <ul class="divide-y divide-gray-100">
+              <li>
+                <a
+                  routerLink="/org"
+                  class="flex items-center gap-x-3 px-4 py-3 text-gray-800 hover:bg-gray-50 transition-colors"
+                >
+                <i class="fas fa-building text-indigo-500"></i>
+                  Structure organisationnelle
+                </a>
+              </li>
+              <li>
+                <a
+                  routerLink="/"
+                  class="flex items-center gap-x-3 px-4 py-3 text-gray-800 hover:bg-gray-50 transition-colors"
+                >
+                <i class="fas fa-list text-indigo-500"></i>
+                  Liste des structures
+                </a>
+              </li>
+            </ul>
+          </div>
+          </div>
+        </div>
+      
+        <!-- Utilisateur -->
+        <div class="relative">
+          <button
+            type="button"
+            class="flex items-center gap-x-2 text-white p-2 bg-white/20 hover:bg-white/30 rounded-full"
+            (click)="toggleMenu('user')"
+          >
+            <i class="fas fa-user-circle text-2xl hover:text-indigo-200"></i>
+          </button>
+
+
+          <div
+          *ngIf="menuState.user"
+          @fadeInOut
+          class="absolute left-0 mt-2 w-56 bg-white border border-gray-100 rounded-lg shadow-md
+                 ring-1 ring-gray-100 ring-opacity-5 overflow-hidden
+                 transition-opacity duration-200"
+        >
+          <ul class="divide-y divide-gray-100">
+            <li>
+              <a
+                routerLink="/sign-up"
+                class="flex items-center gap-x-3 px-4 py-3 text-gray-800 hover:bg-gray-50 transition-colors"
+              >
+              <i class="fas fa-user-plus text-indigo-500"></i>
+              Inscription
+              </a>
+            </li>
+            <li>
+              <a
+                routerLink="/login"
+                class="flex items-center gap-x-3 px-4 py-3 text-gray-800 hover:bg-gray-50 transition-colors"
+              >
+              <i class="fas fa-sign-in-alt text-indigo-500"></i>
+              Connexion
+              </a>
+            </li>
+          </ul>
+        </div>
+        </div>
+      </nav>
+      
+
+  <!-- Hero content -->
+  <div class="relative z-20 flex items-center justify-center h-[500px]">
+    <div class="text-center px-6 animate-fade-in">
+      <h1
+        class="text-4xl sm:text-5xl lg:text-6xl font-light text-white drop-shadow-lg"
+      >
+        Un nouveau défi vous attend dès aujourd’hui
+      </h1>
+      <p class="mt-2 text-lg text-white">
+        Ne laissez pas passer votre prochaine opportunité de carrière.
+        Rejoignez-nous.
+      </p>
+      <form
+        (submit)="search()"
+        class="mt-8 w-full sm:w-auto bg-white/20 backdrop-blur-md rounded-lg p-4 flex flex-col sm:flex-row gap-2"
+      >
+        <input
+          type="text"
+          placeholder="Saisissez votre critère de recherche..."
+          [(ngModel)]="criteria"
+          name="crit"
+          class="flex-1 px-4 py-2 rounded-lg focus:outline-none"
+        />
+        <select
+          [(ngModel)]="typePoste"
+          name="type"
+          class="px-4 py-2 mr-30 text-white rounded-lg focus:outline-none"
+        >
+          <option value="">Type de poste</option>
+          <option *ngFor="let t of types" [value]="t">{{ t.nom }}</option>
+        </select>
+        <button
+          type="submit"
+          class="px-6 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-semibold"
+        >
+          Rechercher
+        </button>
+      </form>
+    </div>
+  </div>
+</header>
+
+<!-- 2) GRID DE CARTES -->
+<div
+  class="max-w-[84rem] mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 -mt-28 relative z-20"
+>
+  <!-- Carte 1 -->
+  <div class="bg-white rounded-lg shadow p-6">
+    <div class="flex items-center mb-4">
+      <i class="fas fa-bullhorn text-blue-500 text-3xl"></i>
+      <h3 class="ml-3 font-semibold text-lg">Appel à candidatures</h3>
+    </div>
+    <p class="text-gray-600 text-sm mb-4">
+      Un appel à candidatures est une annonce officielle émise pour inviter les
+      personnes concernées à soumettre leurs candidatures pour un poste à
+      pourvoir.
+    </p>
+    <ul class="space-y-1 text-gray-600 text-xs">
+      <li class="flex items-center">
+        <i class="fas fa-check text-green-500 mr-2"></i>L’entité concernée
+      </li>
+      <li class="flex items-center">
+        <i class="fas fa-check text-green-500 mr-2"></i>La référence de la décision
+      </li>
+      <li class="flex items-center">
+        <i class="fas fa-check text-green-500 mr-2"></i>La date de publication
+      </li>
+      <li class="flex items-center">
+        <i class="fas fa-check text-green-500 mr-2"></i>La date de clôture du dépôt des dossiers
+      </li>
+      <li class="flex items-center">
+        <i class="fas fa-check text-green-500 mr-2"></i>Fiche du profil requis
+      </li>
+      <li class="flex items-center">
+        <i class="fas fa-check text-green-500 mr-2"></i>Fiche de fonction du poste
+      </li>
+      <li class="flex items-center">
+        <i class="fas fa-check text-green-500 mr-2"></i>Liste des candidats retenus
+      </li>
+      <li class="flex items-center">
+        <i class="fas fa-check text-green-500 mr-2"></i>Résultats définitifs
+      </li>
+    </ul>
+  </div>
+
+  <!-- Carte 2 -->
+  <div class="bg-white rounded-lg shadow p-6">
+    <div class="flex items-center mb-4">
+      <i class="fas fa-sitemap text-indigo-500 text-3xl"></i>
+      <h3 class="ml-3 font-semibold text-lg">Structure Organisationnelle</h3>
+    </div>
+    <p class="text-gray-600 text-sm mb-4">
+      Une structure organisationnelle définit le cadre hiérarchique et les
+      règles qui régissent la prise de décision, la répartition des tâches, et
+      la coordination au sein de l'entreprise.
+    </p>
+    <ul class="space-y-1 text-gray-600 text-xs">
+      <li class="flex items-center">
+        <i class="fas fa-check text-green-500 mr-2"></i>Organigramme de l'ONEE-BE
+      </li>
+      <li class="flex items-center">
+        <i class="fas fa-check text-green-500 mr-2"></i>Fiche de fonction des postes
+      </li>
+      <li class="flex items-center">
+        <i class="fas fa-check text-green-500 mr-2"></i>Coordonnées des responsables
+      </li>
+    </ul>
+  </div>
+
+  <!-- Carte 3 -->
+  <div class="bg-white rounded-lg shadow p-6">
+    <div class="flex items-center mb-4">
+      <i class="fas fa-file-alt text-green-500 text-3xl"></i>
+      <h3 class="ml-3 font-semibold text-lg">Documents Organisationnels</h3>
+    </div>
+    <p class="text-gray-600 text-sm mb-4">
+      Ces documents formels structurent et régulent le fonctionnement de toute
+      organisation. Ils garantissent un fonctionnement clair et efficace.
+    </p>
+    <ul class="space-y-1 text-gray-600 text-xs">
+      <li class="flex items-center">
+        <i class="fas fa-check text-green-500 mr-2"></i>Décisions
+      </li>
+      <li class="flex items-center">
+        <i class="fas fa-check text-green-500 mr-2"></i>Notes de services
+      </li>
+      <li class="flex items-center">
+        <i class="fas fa-check text-green-500 mr-2"></i>Délégations de pouvoirs
+      </li>
+      <li class="flex items-center">
+        <i class="fas fa-check text-green-500 mr-2"></i>Procédures
+      </li>
+      <li class="flex items-center">
+        <i class="fas fa-check text-green-500 mr-2"></i>Modèles (annexes, PV, etc.)
+      </li>
+    </ul>
+  </div>
+
+<!-- Carte 4 -->
+<div class="bg-white rounded-lg shadow p-6">
+    <!-- En-tête identique aux autres cartes -->
+    <div class="flex items-center mb-4">
+      <i class="fas fa-briefcase text-yellow-500 text-3xl"></i>
+      <h3 class="ml-3 font-semibold text-lg">Gestion de Postes</h3>
+    </div>
+  
+    <!-- Liste avec titres en text-sm et descriptions en text-xs -->
+    <ul class="space-y-4 text-gray-600">
+      <li class="flex items-start">
+        <i class="fas fa-user-tie text-blue-500 mr-2 mt-1"></i>
+        <div>
+          <p class="font-medium text-sm">Nomination</p>
+          <p class="text-xs">Une nomination désigne une personne pour occuper un poste de responsabilité officiellement.</p>
+        </div>
+      </li>
+  
+      <li class="flex items-start">
+        <i class="fas fa-search text-green-500 mr-2 mt-1"></i>
+        <div>
+          <p class="font-medium text-sm">Recherche d’un poste</p>
+          <p class="text-xs">Cette sous-rubrique permet de rechercher un poste précis dans la structure organisationnelle.</p>
+        </div>
+      </li>
+  
+      <li class="flex items-start">
+        <i class="fas fa-clipboard-list text-indigo-500 mr-2 mt-1"></i>
+        <div>
+          <p class="font-medium text-sm">Postes vacants</p>
+          <p class="text-xs">Affiche l’ensemble des postes vacants de l’ONEE-BE avec un moteur de recherche.</p>
+        </div>
+      </li>
+  
+      <li class="flex items-start">
+        <i class="fas fa-user-clock text-red-500 mr-2 mt-1"></i>
+        <div>
+          <p class="font-medium text-sm">Intérimaires</p>
+          <p class="text-xs">Affiche les postes occupés par des intérimaires avec leurs détails.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+  
+</div>
+
+<section class="bg-white py-16">
+  <!-- autre contenu hors header -->
+</section>

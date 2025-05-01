@@ -1,0 +1,16 @@
+<app-sidebar></app-sidebar>
+<app-modal
+  [title]="'Erreur'"
+  [message]="'Impossible de charger les données'"
+  [type]="'error'"
+  [show]="showErrorModal"
+></app-modal>
+
+<button (click)="openUpload()">Ajouter une PJ</button>
+
+<app-piece-jointe-upload
+  [isOpen]="isUploadOpen"
+  (closed)="closeUpload()"
+  (confirmed)="handleConfirm()">
+</app-piece-jointe-upload>
+

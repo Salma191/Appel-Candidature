@@ -1,0 +1,43 @@
+<app-sidebar></app-sidebar>
+<app-table>
+  <ul class="grid grid-flow-col text-center text-gray-500">
+    <li *ngFor="let step of steps; let i = index " class="relative">
+      <a
+        class="flex justify-center items-center py-4 px-4 border-b-4 border-gray-200 transition duration-300 pl-6 pr-10"
+        [ngClass]="{
+          'text-indigo-600 border-indigo-600 font-semibold bg-indigo-50 rounded-md': step.active,
+          'hover:text-indigo-600 hover:border-indigo-600': !step.active
+        }"
+        (click)="setActiveStep(step)"
+      >
+        {{ step.label }}
+        <span *ngIf="step.count !== undefined" class="ml-2 bg-gray-200 text-gray-700 text-xs font-medium px-2 py-1 rounded-full">
+          {{ step.count }}
+        </span>
+      </a>
+      <!-- Flèche entre les étapes -->
+      <i
+        *ngIf="i < steps.length - 1"
+        class="fas fa-chevron-right absolute top-1/2 right-[-5px] transform -translate-y-1/2 text-indigo-600 z-10"
+      ></i>
+    </li>
+  </ul>
+  
+  
+  <!-- Contenu dynamique selon l'onglet sélectionné -->
+  <div class="mt-10">
+    <ng-container *ngIf="activeStep === 'Vérification des candidatures'">
+      <app-verification-candidatures></app-verification-candidatures>
+    </ng-container>
+    <ng-container *ngIf="activeStep === 'Entretiens'">
+      <app-entretien></app-entretien>
+    </ng-container>
+    <ng-container *ngIf="activeStep === 'Évaluation'">
+      <app-evaluation></app-evaluation>  
+    </ng-container>
+    <ng-container *ngIf="activeStep === 'Nomination'">
+      <app-nomination></app-nomination> 
+    </ng-container>
+  </div>
+
+</app-table>

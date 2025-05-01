@@ -1,0 +1,214 @@
+<app-sidebar></app-sidebar>
+<div class="bg-gray-50 py-4">
+  <header class="mt-6 mx-auto sm:px-6 lg:px-8 rounded-md"
+      [class.expanded]="isSidebarOpen" 
+      [class.collapsed]="!isSidebarOpen">
+    
+    <div class="flex space-x-4">
+      <!-- Card 1: Nombre total de candidatures -->
+      <div class="w-full md:w-1/3 mb-4">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <div class="flex justify-between mb-4">
+            <!-- Titre de la section -->
+             <div class="w-2/3"> 
+            <h5 class="text-center text-lg font-semibold text-gray-700">Total des Appels</h5>
+            <p class="text-center text-3xl font-bold text-gray-900 mr-2 mt-2"> {{ posteAppel }} </p>
+          </div>
+            <i class="fas fa-bullhorn text-blue-500 text-6xl w-1/3 text-center mt-2"></i>
+          </div>
+        
+          <!-- Section affichant le nombre de décisions en draft avec une icône -->
+          <div class="flex justify-between mt-2">
+            <div class="flex items-center">
+              <!-- Icône "En draft" (cercle avec un stylo) -->
+              <i class="fas fa-pencil-alt text-gray-600"></i>
+              <p class="text-sm text-gray-600 ml-2">Ouverts:</p>
+            </div>
+            <p class="text-lg font-bold text-gray-900">{{ posteAppelOuvert }}</p>
+          </div>
+      
+          <!-- Section affichant le nombre de décisions signées avec une icône -->
+          <div class="flex justify-between mt-2">
+            <div class="flex items-center">
+              <!-- Icône "Signée" (check) -->
+              <i class="fas fa-check-circle text-gray-600"></i>
+              <p class="text-sm text-gray-600 ml-2">Clôturés:</p>
+            </div>
+            <p class="text-lg font-bold text-gray-900">{{ posteAppelCloture }}</p>
+          </div>
+      
+          <!-- Section affichant le nombre de décisions lancées avec une icône -->
+          <div class="flex justify-between mt-2">
+            <div class="flex items-center">
+              <!-- Icône "Lancée" (flèche) -->
+              <i class="fas fa-spinner text-gray-600"></i>
+              <p class="text-sm text-gray-600 ml-2">En cours de validation:</p>
+            </div>
+            <p class="text-lg font-bold text-gray-900">{{ posteAppelCours }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full md:w-1/3 mb-4">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <div class="flex justify-between mb-4">
+            <!-- Titre de la section -->
+             <div class="w-2/3"> 
+            <h5 class="text-center text-lg font-semibold text-gray-700">Nombre de PVs</h5>
+            <p class="text-center text-3xl font-bold text-gray-900 mr-2 mt-2"> {{ dtPv }} </p>
+          </div>
+            <i class="fas fa-file-alt text-green-500 text-6xl w-1/3 text-center mt-4"></i>
+          </div>
+        
+          <div class="flex justify-between mt-8">
+            <div class="flex items-center">
+              <i class="fas fa-pencil-alt text-gray-600"></i>
+              <p class="text-sm text-gray-600 ml-2">En Draft:</p>
+            </div>
+            <p class="text-lg font-bold text-gray-900">{{ pvDraft }}</p>
+          </div>
+      
+          <div class="flex justify-between mt-6">
+            <div class="flex items-center">
+              <i class="fas fa-check-circle text-gray-600"></i>
+              <p class="text-sm text-gray-600 ml-2">Approuvés:</p>
+            </div>
+            <p class="text-lg font-bold text-gray-900">{{ pvApprouve }}</p>
+          </div>
+      
+
+        </div>
+      </div>
+  
+      <!-- Card 2: Candidatures en cours -->
+      <div class="w-full md:w-1/3 mb-4">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <div class="flex justify-between mb-4">
+            <!-- Titre de la section -->
+             <div class="w-2/3"> 
+            <h5 class="text-center text-lg font-semibold text-gray-700">Total des Décisions</h5>
+            <p class="text-center text-3xl font-bold text-gray-900 mr-2 mt-2"> {{ dtDec }} </p>
+          </div>
+            <i class="fas fa-file-contract text-indigo-500 text-6xl w-1/3 text-center mt-2"></i>
+          </div>
+        
+          <!-- Section affichant le nombre de décisions en draft avec une icône -->
+          <div class="flex justify-between mt-2">
+            <div class="flex items-center">
+              <!-- Icône "En draft" (cercle avec un stylo) -->
+              <i class="fas fa-pencil-alt text-gray-600"></i>
+              <p class="text-sm text-gray-600 ml-2">En draft:</p>
+            </div>
+            <p class="text-lg font-bold text-gray-900">{{ decDraft }}</p>
+          </div>
+      
+          <!-- Section affichant le nombre de décisions signées avec une icône -->
+          <div class="flex justify-between mt-2">
+            <div class="flex items-center">
+              <!-- Icône "Signée" (check) -->
+              <i class="fas fa-check-circle text-gray-600"></i>
+              <p class="text-sm text-gray-600 ml-2">Signées:</p>
+            </div>
+            <p class="text-lg font-bold text-gray-900">{{ decSigne }}</p>
+          </div>
+      
+          <!-- Section affichant le nombre de décisions lancées avec une icône -->
+          <div class="flex justify-between mt-2">
+            <div class="flex items-center">
+              <!-- Icône "Lancée" (flèche) -->
+              <i class="fas fa-arrow-circle-down text-gray-600"></i>
+              <p class="text-sm text-gray-600 ml-2">Lancées:</p>
+            </div>
+            <p class="text-lg font-bold text-gray-900">{{ decLance }}</p>
+          </div>
+        </div>
+      </div>
+      
+      
+      
+      
+      
+    </div>
+
+    <!-- Section Postes -->
+    <div class="flex space-x-4 mt-6">
+      <!-- Card 4: Nombre de postes disponibles -->
+      <div class="w-full md:w-1/3 mb-4">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <div class="flex justify-between mb-4">
+            <!-- Titre de la section -->
+             <div class="w-2/3"> 
+            <h5 class="text-center text-lg font-semibold text-gray-700">Postes Créés</h5>
+            <p class="text-center text-3xl font-bold text-gray-900 mr-2 mt-2"> {{ poste }} </p>
+          </div>
+            <i class="fas fa-briefcase text-yellow-500 text-6xl w-1/3 text-center mt-4"></i>
+          </div>
+        
+          <!-- <div class="flex justify-between mt-2">
+            <div class="flex items-center">
+              <i class="fas fa-pencil-alt text-gray-600"></i>
+              <p class="text-sm text-gray-600 ml-2">Pourvus:</p>
+            </div>
+            <p class="text-lg font-bold text-gray-900">{{ decDraft }}</p>
+          </div>
+      
+          <div class="flex justify-between mt-2">
+            <div class="flex items-center">
+              <i class="fas fa-check-circle text-gray-600"></i>
+              <p class="text-sm text-gray-600 ml-2">Vacants:</p>
+            </div>
+            <p class="text-lg font-bold text-gray-900">{{ decSigne }}</p>
+          </div>
+      
+          <div class="flex justify-between mt-2">
+            <div class="flex items-center">
+              <i class="fas fa-arrow-circle-down text-gray-600"></i>
+              <p class="text-sm text-gray-600 ml-2">En cours de traitement:</p>
+            </div>
+            <p class="text-lg font-bold text-gray-900">{{ decLance }}</p>
+          </div> -->
+        </div>
+      </div>
+  
+      <!-- Card 5: Nombre de PV Décisions -->
+      <div class="w-full md:w-1/3 mb-4">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <div class="flex justify-between mb-4">
+            <!-- Titre de la section -->
+             <div class="w-2/3"> 
+            <h5 class="text-center text-lg font-semibold text-gray-700">Nombre de Candidats</h5>
+            <p class="text-center text-3xl font-bold text-gray-900 mr-2 mt-2"> {{ cand }} </p>
+          </div>
+            <i class="fas fa-users text-red-500 text-6xl w-1/3 text-center mt-4"></i>
+          </div>
+        
+          <!-- <div class="flex justify-between mt-2">
+            <div class="flex items-center">
+              <i class="fas fa-pencil-alt text-gray-600"></i>
+              <p class="text-sm text-gray-600 ml-2">Éligibles:</p>
+            </div>
+            <p class="text-lg font-bold text-gray-900">{{ decDraft }}</p>
+          </div>
+      
+          <div class="flex justify-between mt-2">
+            <div class="flex items-center">
+              <i class="fas fa-check-circle text-gray-600"></i>
+              <p class="text-sm text-gray-600 ml-2">Non éligibles:</p>
+            </div>
+            <p class="text-lg font-bold text-gray-900">{{ decSigne }}</p>
+          </div>
+      
+          <div class="flex justify-between mt-2">
+            <div class="flex items-center">
+              <i class="fas fa-arrow-circle-down text-gray-600"></i>
+              <p class="text-sm text-gray-600 ml-2">En attente d’éligibilité:</p>
+            </div>
+            <p class="text-lg font-bold text-gray-900">{{ decLance }}</p>
+          </div> -->
+        </div>
+      </div>
+  
+
+    </div>
+  </header>
+</div>
